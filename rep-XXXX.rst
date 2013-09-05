@@ -12,8 +12,6 @@ Outline
 #. Abstract_
 #. Motivation_
 #. Rationale_
-#. `Data representation`_
-#. Compatibility_
 #. References_
 #. Copyright_
 
@@ -21,20 +19,20 @@ Outline
 Abstract
 ========
 
-This REP specifies the second version of the ROS-Industrial robot controller client/server motion/status interface.  It is relevant to anybody using ROS-I standard libraries to communicate with an industrial robot controller.  Note: This spec does not specify the ROS API, which is specified seperately.
+This REP specifies the second version of the ROS-Industrial robot controller client/server motion/status interface.  It is relevant to anybody using ROS-I standard libraries to communicate with an industrial robot controller.  Note: This spec does not specify the ROS API[1], which is specified seperately.
 
 
 Motivation
 ==========
 
-The first version of the motion/status interface (loosely documented in code and wikis) worked well for single arm manipulators.  Multi-arm (seperate or syncronized) was not supported in a generic manor that could be used across all platforms.  Some attempts were made to support multiple arms using the existing interface, but these often required multi-arm joint states which could exceed the max number of joints and did not allow for mixed multi-arm/single-arm motion.
+The first version of the motion/status interface (loosely documented in code and wikis) worked well for single arm manipulators.  Multi-arm (seperate or syncronized) was not supported in a generic manor that could be used across all platforms[2].  Some attempts were made to support multiple arms using the existing interface, but these often required multi-arm joint states which could exceed the max number of joints and did not allow for mixed multi-arm/single-arm motion.
 
 Definitions
 =========
 
 joint, axis - A single controllable item
 
-group, motion group - A group of joints or axes.  At the controller level these are non-overlapping (i.e. a joint can be in one and only one group.
+group, motion group, arm - A group of joints or axes.  At the controller level these are non-overlapping (i.e. a joint can be in one and only one group.
 
 synchronous motion - coordinated motion (at the real time level) of a group of joints
 
@@ -55,6 +53,7 @@ The industrial robot controller motion interface shall meet the following requir
  
 Design Assumptions
 =========
+The following assumptions are inherient in the client/server design.
  * All joints (regardless of group) shall be uniquely named.
  
 Motion Interface
@@ -71,10 +70,21 @@ The motion interface can be expressed as four variations:
  * Multi-Arm (Sync) - Multiple arms are defined.  A single joint trajectory containing all joints is received and sent to the controller in a single simple message.  The controller receives the message and performs synchronized motion.
  * Multi-Arm (Async) - Multiple arma are defined.  Multiple joint trajectories for each arm/motion group are received and sent to the controller in independent messages.  The controller receives the messages and performs asynchronous motion.  NOTE: Although this may look like syncronized motion there isn't a real time guarentee tha the waypoints across multiple groups are reached at the same time.
  * Multi-Arm (Sync & Async) - Combination of the two above operating modes.  
+ 
+ .. image:: rep-XXXX/motion_interface.png
 
+State Interface
+=========
+The robot state interface encapsulates all the data coming FROM the robot controller, including joint position, velocity (if available), acceleration(if available), position error and general robot status information[3].  The implementation of the state interface is simpler than the motion interface because it can be generalized to the multi-arm case, where a single arm is just a specific example.
+
+The state interface is split into a joint state and robot status interface:
+ * Joint State - A single controller message is split into N JointState messages
+ 
 References
 ==========
-.. [x] Google group discussion: Support for Dual-arm robots (https://groups.google.com/forum/#!topic/swri-ros-pkg-dev/LHrfVgEA4hs)
+.. [1] Industrial robot driver spec (ROS API) ( http://wiki.ros.org/Industrial/Industrial_Robot_Driver_Spec ).
+.. [2] Google group discussion: Support for Dual-arm robots (https://groups.google.com/forum/#!topic/swri-ros-pkg-dev/LHrfVgEA4hs)
+.. [3] Industrial robot status message (Groovy) ( http://docs.ros.org/groovy/api/industrial_msgs/html/msg/RobotStatus.html ).
 
 Copyright
 =========
