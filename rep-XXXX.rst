@@ -3,7 +3,6 @@ Title: Industrial Robot Controller Motion/Status Interface (Version 2)
 Author: Shaun Edwards
 Status: Draft
 Type: Standards Track
-Content-Type: text/x-rst
 Created: 19-August-2013
 
 Outline
@@ -19,7 +18,7 @@ Outline
 Abstract
 ========
 
-This REP specifies the second version of the ROS-Industrial robot controller client/server motion/status interface.  It is relevant to anybody using ROS-I standard libraries to communicate with an industrial robot controller.  Note: This spec does not specify the ROS API[1], which is specified seperately.
+This REP specifies the second version of the ROS-Industrial robot controller client/server motion/status interface.  It is relevant to anybody using ROS-I standard libraries to communicate with an industrial robot controller.  Note: This spec does not specify the ROS API[1], which is specified seperately.  However, it does make some assumptions about the interface which are not explicitly defined by the API but are assumed by higher level packages like MoveIt.
 
 
 Motivation
@@ -56,6 +55,25 @@ Design Assumptions
 =========
 The following assumptions are inherient in the client/server design.
  * All joints (regardless of group) shall be uniquely named.
+ 
+ 
+Simple Message Structures
+=========
+The simple message package provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  The solution on the robot controller side is to utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group and then handle the error cases when the simple message exceeds that amount.
+
+
+Dynamic Joint Point
+---------
+
+```ruby
+ length: true message/data length 
+   header: standard msg_type, comms_type, reply_code fields 
+   num_groups: # of motion groups included in this message 
+   group 1: 
+     robot_id:   control-group ID for use on-controller 
+     num_joints: # of joints in this motion group 
+     sequence, valid_fields, positions, velocities, accelerations, effort 
+```
  
 Motion Interface
 =========
@@ -129,6 +147,7 @@ Todo's
 =========
 The following items still need to be addressed:
  * Topics and Services - The ROS API defines topics and services for receiving trajectories.  This should also be supported by the new nodes.
+ * Controller/PC handshaking - Currently most robot/PC communications involves a handshake (either I received and processed the last message or the last message resulted in an error).  This results in robust communications and execution, but doubles the amount of latency in the system.  I think this is the appropriate design, but it may be up for discussion.
  
  
  
