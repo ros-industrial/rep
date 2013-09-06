@@ -1,4 +1,4 @@
-REP: 140
+REP: XXXX
 Title: Industrial Robot Controller Motion/Status Interface (Version 2)
 Author: Shaun Edwards
 Status: Draft
@@ -11,7 +11,7 @@ Outline
 
 #. Abstract_
 #. Motivation_
-#. Rationale_
+#. Definitions_
 #. References_
 #. Copyright_
 
@@ -42,13 +42,14 @@ Requirements
 =========
 
 The industrial robot controller motion interface shall meet the following requirements:
- * A single node shall act as the point of control (motion).  All trajectory topics shall be routed through this node to the controller.
- * It shall allow for synchronous and asynchronous control of single and multiple arms (i.e. a unified driver that allows for differerent types of control to be achieved dynamically without reconfiguration
+ * A single node shall act as the point of control (motion).  All trajectory topics shall be routed through this node to the controller.  This not only simplifies implementation (a controller communicates with a single client) but single point control is key tenant of safety and predictable systems.
+ * It shall allow for synchronous and asynchronous control of single and multiple arms (i.e. a unified driver that allows for differerent types of control to be achieved dynamically without reconfiguration)
  * All incoming joint trajectories should be fully populated with position, velocity, accleration, and timing information. (NOTE: Certain controllers may not require all data, but this will be different between controllers)
  * Joint groups shall be statically defined at the controller level.  ROS trajectories must define motion for all the joints in a group (NOTE: Some controllers have additional axes that aren't used by all robots.  In these cases the axes are ignored by the controller.  However, the motion node should be smart enough to reorder or shift joint values based on configuration data). 
- * Joint trajectories shall be executed one at a time.  Receipt of a new trajectory before the current trajectory is finished shall either result in a motion stop, followed by the execution of the new trajectory or intelligent splicing of the current and new trajectories (depends on the capability of the controller).
- * Joint states shall be published for each arm (joint group) in a single dynamic message
- * Robot status messages shall be published for each arm (joint group) in a single dynamic message.  Although common status indicators may exist (like an e-stop), these will be generated for each joint group. 
+ * Joint trajectories shall be executed one at a time.  Receipt of a new trajectory before the current trajectory is finished shall either result in a motion stop, followed by the execution of the new trajectory.
+ * A single node shall publish joint/robot state information, utilizing a single common connection to the controller.
+ * Joint states shall be sent from the controller to that robot state node in a single dynamic message that encompassess all groups.
+ * Robot states shall be sent from the controller to that robot state node in a single dynamic message that encompassess all groups.
  * The controller joint group structure shall be statically defined at node start up (i.e. in a yaml file read on node construction).  Motion groups are predifined (statically) by most controllers.
  
 Design Assumptions
@@ -72,6 +73,23 @@ The motion interface can be expressed as four variations:
  * Multi-Arm (Sync & Async) - Combination of the two above operating modes.  
  
  .. image:: rep-XXXX/motion_interface.png
+ 
+Node Configuration
+---------
+In order to support the various methods of control, the motion node must be somewhat dynamic/statically reconfigurable[see current parameters].  The node must be able to support subscriptions to multiple topics (all of the same type) as well as conversion from ROS group organizations to controller organization.  This mapping would look similar to the MoveIt controller manager[?].  
+The yaml file will contain a list of structures that defines the joint trajectory topics as well as the mapping to the controller:
+
+```
+topic_list:
+  - name: <topic name>
+    ns: <topic namespace>
+    joints:
+      - <joint_1>
+      - <joint_2>
+      - <joint_N>
+   - name: <topic name>
+     ns: ...
+````
 
 State Interface
 =========
