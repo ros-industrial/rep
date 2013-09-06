@@ -64,16 +64,67 @@ The simple message package provides libraries for communicating with industrial 
 
 Dynamic Joint Point
 ---------
+The dynamic joint point is meant to mimic the ROS JointTrajectory message structure.  A one-to-one mapping of the joints included in the ROS message to the simple message shall be created.  By encapsulating the entire trajectory in a single message, synchronized motion is possible.
 
-```ruby
- length: true message/data length 
-   header: standard msg_type, comms_type, reply_code fields 
-   num_groups: # of motion groups included in this message 
-   group 1: 
-     robot_id:   control-group ID for use on-controller 
-     num_joints: # of joints in this motion group 
-     sequence, valid_fields, positions, velocities, accelerations, effort 
-```
+    length: true message/data length 
+    header: standard msg_type, comms_type, reply_code fields 
+    num_groups: # of motion groups included in this message 
+    group 1: 
+        id:   control-group ID for use on-controller 
+        num_joints: # of joints in this motion group 
+        sequence:
+        valid_fields: #bit field for following items
+        # length of the following items must match num_joints, order set by controller
+        positions[]
+        velocities[] 
+        accelerations[] 
+        effort[] 
+    group 2: ...
+    
+Dynamic Joint State
+---------
+The dynamic joint state is meant to mimic both the ROS JointState and FollowJointTrajectoryFeedback message.  The JointState message specifies the current kinematic/dynamic state of the robot.  The feedback message specifies the current control state of the system (this may or may not be available on all systems)
+
+    length: true message/data length 
+    header: standard msg_type, comms_type, reply_code fields 
+    num_groups: # of motion groups included in this message 
+    group 1: 
+        id:   control-group ID for use on-controller 
+        num_joints: # of joints in this motion group 
+        sequence:
+        valid_fields: #bit field for following items
+        # length of the following items must match num_joints, order set by controller
+        positions[]
+        velocities[] 
+        accelerations[] 
+        effort[]
+        position_desired[]
+        position_errors[]
+        velocity_desired[]
+        velocity_errors[]
+        effort_desired[]
+        effort_error[]
+    group 2: ...
+    
+    
+Dynamic Group Status
+---------
+The dynamic group status is meant to mimic both the ROS-I RobotStatus message.  See the RobotStatus message for field descriptions.
+
+    length: true message/data length 
+    header: standard msg_type, comms_type, reply_code fields 
+    num_groups: # of motion groups included in this message 
+    group 1: 
+        id:   control-group ID for use on-controller 
+        num_joints: # of joints in this motion group 
+        mode:
+        e_stopped:
+        drives_powered:
+        motion_possible:
+        in_motion:
+        in_error:
+    group 2: ...
+
  
 Motion Interface
 =========
@@ -112,7 +163,7 @@ State Interface
 =========
 The robot state interface encapsulates all the data coming FROM the robot controller, including joint position, velocity (if available), effort(if available), position error and general robot status information[3].  The implementation of the state interface is simpler than the motion interface because it can be generalized to the multi-arm case, where a single arm is just a specific example.
 
-The state interface is split into a joint state and robot status interface:
+The state interface is split into a joint state and robot status interface.  The split allows joint state feedback to be sent at a higher rate than status information (which should change slowly).
  * Joint State - A single controller message is split into N JointState messages.
  * Robot Status - A single controller message that contatins status information for each arm.
  
