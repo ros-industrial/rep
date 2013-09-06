@@ -79,24 +79,58 @@ Node Configuration
 In order to support the various methods of control, the motion node must be somewhat dynamic/statically reconfigurable[see current parameters].  The node must be able to support subscriptions to multiple topics (all of the same type) as well as conversion from ROS group organizations to controller organization.  This mapping would look similar to the MoveIt controller manager[?].  
 The yaml file will contain a list of structures that defines the joint trajectory topics as well as the mapping to the controller:
 
-```
-topic_list:
-  - name: <topic name>
-    ns: <topic namespace>
-    joints:
-      - <joint_1>
-      - <joint_2>
-      - <joint_N>
-   - name: <topic name>
-     ns: ...
-````
+        topic_list:
+          - name: <topic name>
+            ns: <topic namespace>
+            group: <controller group#>
+            joints:
+              - <joint_1>
+              - <joint_2>
+              - <joint_N>
+           - name: <topic name>
+             ns: ...
 
 State Interface
 =========
-The robot state interface encapsulates all the data coming FROM the robot controller, including joint position, velocity (if available), acceleration(if available), position error and general robot status information[3].  The implementation of the state interface is simpler than the motion interface because it can be generalized to the multi-arm case, where a single arm is just a specific example.
+The robot state interface encapsulates all the data coming FROM the robot controller, including joint position, velocity (if available), effort(if available), position error and general robot status information[3].  The implementation of the state interface is simpler than the motion interface because it can be generalized to the multi-arm case, where a single arm is just a specific example.
 
 The state interface is split into a joint state and robot status interface:
- * Joint State - A single controller message is split into N JointState messages
+ * Joint State - A single controller message is split into N JointState messages.
+ * Robot Status - A single controller message that contatins status information for each arm.
+ 
+ .. image:: rep-XXXX/state_interface.png
+ 
+ 
+Node Configuration
+---------
+Similar to the motion interface, the state interface will require configuration.  The state interface will have to parse messages coming from the robot and convert the date into the desired ROS topics.  The level of configuration available on the robot controller will vary, so the messages coming from the controller may be more or less dynamic.  The state node, based on configuration, will identify the pertinent information from the robot controller and convert to ROS topics.  Additional information will be ingored.  
+
+The yaml file will contain a list of structures that defines the joint trajectory/status topics as well as the mapping to the controller.  Note, this configuration is very similar to the motion node, with the exception that the state node performs a one-to-one mapping from controller groups to topics.  The motion node, in addition to this, can perform a one(topic) to many (groups) mapping.
+
+```
+        topic_list:
+          - state
+              group: <controller group#>
+              - joint
+                - name: <topic name>
+                  ns: <topic namespace>
+                  joints:
+                    - <joint_1>
+                    - <joint_2>
+                    - <joint_N>
+              - status
+                - name: <topic name>
+                - ns: <topic namespace>
+```
+ 
+ 
+ 
+Todo's
+=========
+The following items still need to be addressed:
+ * Topics and Services - The ROS API defines topics and services for receiving trajectories.  This should also be supported by the new nodes.
+ 
+ 
  
 References
 ==========
