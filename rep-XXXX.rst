@@ -1,9 +1,11 @@
-REP: XXXX
-Title: Industrial Robot Controller Motion/Status Interface (Version 2)
-Author: Shaun Edwards
-Status: Draft
-Type: Standards Track
-Created: 19-August-2013
+::
+    
+    REP: XXXX
+    Title: Industrial Robot Controller Motion/Status Interface (Version 2)
+    Author: Shaun Edwards
+    Status: Draft
+    Type: Standards Track
+    Created: 19-August-2013
 
 Outline
 =======
@@ -18,24 +20,22 @@ Outline
 Abstract
 ========
 
-This REP specifies the second version of the ROS-Industrial robot controller client/server motion/status interface.  It is relevant to anybody using ROS-I standard libraries to communicate with an industrial robot controller.  Note: This spec does not specify the ROS API[1], which is specified seperately.  However, it does make some assumptions about the interface which are not explicitly defined by the API but are assumed by higher level packages like MoveIt.
-
-
-Motivation
-==========
-
-The first version of the motion/status interface (loosely documented in code and wikis) worked well for single arm manipulators.  Multi-arm (seperate or syncronized) was not supported in a generic manor that could be used across all platforms[2].  Some attempts were made to support multiple arms using the existing interface, but these often required multi-arm joint states which could exceed the max number of joints and did not allow for mixed multi-arm/single-arm motion.
+This REP specifies the second version of the ROS-Industrial robot controller client/server motion/state/status interface [#rbt_clnt]_.  It is relevant to anybody using ROS-I standard libraries to communicate with an industrial robot controller.  Note: This spec does not specify the ROS API [#ros_api]_, which is specified seperately.  However, it does make some assumptions about the interface which are not explicitly defined by the API but are assumed by higher level packages like MoveIt [#moveit]_.
 
 Definitions
 =========
 
-joint, axis - A single controllable item
+The following definitions are used throughout:
+ * joint, axis - A single controllable item.  Typically a revolute or linear motion.
+ * group, motion group, arm - A group of joints or axes.  At the controller level these are non-overlapping (i.e. a joint can be in one and only one group.
+ * synchronous motion - coordinated motion (at the real time level) of a group of joints
+ * asynchronous motion - independent control of joints or groups.
 
-group, motion group, arm - A group of joints or axes.  At the controller level these are non-overlapping (i.e. a joint can be in one and only one group.
+Motivation
+==========
 
-synchronous motion - coordinated motion (at the real time level) of a group of joints
+The first version of the motion/status interface (loosely documented in code and wikis) worked well for single arm manipulators.  Multi-arm (asynchronous or syncronous) was not supported in a generic manor that could be used across all platforms [#discuss]_.  Some attempts were made to support multiple arms using the existing interface, but these often required multi-arm joint states which could exceed the max number of joints and did not allow for mixed multi-arm/single-arm motion.
 
-asynchronous motion - independent control of joints or groups.
 
 Requirements
 =========
@@ -43,28 +43,28 @@ Requirements
 The industrial robot controller motion interface shall meet the following requirements:
  * A single node shall act as the point of control (motion).  All trajectory topics shall be routed through this node to the controller.  This not only simplifies implementation (a controller communicates with a single client) but single point control is key tenant of safety and predictable systems.
  * It shall allow for synchronous and asynchronous control of single and multiple arms (i.e. a unified driver that allows for differerent types of control to be achieved dynamically without reconfiguration)
- * All incoming joint trajectories should be fully populated with position, velocity, accleration, and timing information. (NOTE: Certain controllers may not require all data, but this will be different between controllers)
+ * All incoming joint trajectories should be fully populated with position, velocity, accleration, and timing information [#traj_msg]_. (NOTE: Certain controllers may not require all data, but this will be different between controllers)
  * Joint groups shall be statically defined at the controller level.  ROS trajectories must define motion for all the joints in a group (NOTE: Some controllers have additional axes that aren't used by all robots.  In these cases the axes are ignored by the controller.  However, the motion node should be smart enough to reorder or shift joint values based on configuration data). 
  * Joint trajectories shall be executed one at a time.  Receipt of a new trajectory before the current trajectory is finished shall either result in a motion stop, followed by the execution of the new trajectory.
  * A single node shall publish joint/robot state information, utilizing a single common connection to the controller.
  * Joint states shall be sent from the controller to that robot state node in a single dynamic message that encompassess all groups.
- * Robot states shall be sent from the controller to that robot state node in a single dynamic message that encompassess all groups.
+ * Group status shall be sent from the controller to that robot state node in a single dynamic message that encompassess all groups.
  * The controller joint group structure shall be statically defined at node start up (i.e. in a yaml file read on node construction).  Motion groups are predifined (statically) by most controllers.
  
 Design Assumptions
 =========
-The following assumptions are inherient in the client/server design.
+The following assumptions are inherient in the client/server design:
  * All joints (regardless of group) shall be uniquely named.
  
  
 Simple Message Structures
 =========
-The simple message package provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  The solution on the robot controller side is to utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group and then handle the error cases when the simple message exceeds that amount.
+The simple message package [#simp_msg]_ provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  If dynamic message are used, controller side servers should utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group and then handle the error cases when the simple message exceeds that amount.  By creating dynamic simple messages for motion and status, multiple arm control and monitoring can be achieved.
 
 
 Dynamic Joint Point
 ---------
-The dynamic joint point is meant to mimic the ROS JointTrajectory message structure.  A one-to-one mapping of the joints included in the ROS message to the simple message shall be created.  By encapsulating the entire trajectory in a single message, synchronized motion is possible.
+The dynamic joint point is meant to mimic the ROS JointTrajectory message structure [#traj_msg]_.  A one-to-one mapping of the joints included in the ROS message to the simple message shall be created.  By encapsulating the entire trajectory in a single message, synchronized motion is possible.::
 
     length: true message/data length 
     header: standard msg_type, comms_type, reply_code fields 
@@ -81,9 +81,10 @@ The dynamic joint point is meant to mimic the ROS JointTrajectory message struct
         effort[] 
     group 2: ...
     
+    
 Dynamic Joint State
 ---------
-The dynamic joint state is meant to mimic both the ROS JointState and FollowJointTrajectoryFeedback message.  The JointState message specifies the current kinematic/dynamic state of the robot.  The feedback message specifies the current control state of the system (this may or may not be available on all systems)
+The dynamic joint state is meant to mimic both the ROS JointState and FollowJointTrajectoryFeedback message.  The JointState message specifies the current kinematic/dynamic state of the robot.  The feedback message specifies the current control state of the system (this may or may not be available on all systems).::
 
     length: true message/data length 
     header: standard msg_type, comms_type, reply_code fields 
@@ -109,7 +110,7 @@ The dynamic joint state is meant to mimic both the ROS JointState and FollowJoin
     
 Dynamic Group Status
 ---------
-The dynamic group status is meant to mimic both the ROS-I RobotStatus message.  See the RobotStatus message for field descriptions.
+The dynamic group status is meant to mimic both the ROS-I RobotStatus message.  See the RobotStatus message for field descriptions.::
 
     length: true message/data length 
     header: standard msg_type, comms_type, reply_code fields 
@@ -146,7 +147,7 @@ The motion interface can be expressed as four variations:
 Node Configuration
 ---------
 In order to support the various methods of control, the motion node must be somewhat dynamic/statically reconfigurable[see current parameters].  The node must be able to support subscriptions to multiple topics (all of the same type) as well as conversion from ROS group organizations to controller organization.  This mapping would look similar to the MoveIt controller manager[?].  
-The yaml file will contain a list of structures that defines the joint trajectory topics as well as the mapping to the controller:
+The yaml file will contain a list of structures that defines the joint trajectory topics as well as the mapping to the controller.::
 
         topic_list:
           - name: <topic name>
@@ -161,7 +162,7 @@ The yaml file will contain a list of structures that defines the joint trajector
 
 State Interface
 =========
-The robot state interface encapsulates all the data coming FROM the robot controller, including joint position, velocity (if available), effort(if available), position error and general robot status information[3].  The implementation of the state interface is simpler than the motion interface because it can be generalized to the multi-arm case, where a single arm is just a specific example.
+The robot state interface encapsulates all the data coming FROM the robot controller, including joint position, velocity (if available), effort(if available), position error and general robot status information [#rbt_stat]_.  The implementation of the state interface is simpler than the motion interface because it can be generalized to the multi-arm case, where a single arm is just a specific example.
 
 The state interface is split into a joint state and robot status interface.  The split allows joint state feedback to be sent at a higher rate than status information (which should change slowly).
  * Joint State - A single controller message is split into N JointState messages.
@@ -174,9 +175,8 @@ Node Configuration
 ---------
 Similar to the motion interface, the state interface will require configuration.  The state interface will have to parse messages coming from the robot and convert the date into the desired ROS topics.  The level of configuration available on the robot controller will vary, so the messages coming from the controller may be more or less dynamic.  The state node, based on configuration, will identify the pertinent information from the robot controller and convert to ROS topics.  Additional information will be ingored.  
 
-The yaml file will contain a list of structures that defines the joint trajectory/status topics as well as the mapping to the controller.  Note, this configuration is very similar to the motion node, with the exception that the state node performs a one-to-one mapping from controller groups to topics.  The motion node, in addition to this, can perform a one(topic) to many (groups) mapping.
+The yaml file will contain a list of structures that defines the joint trajectory/status topics as well as the mapping to the controller.  Note, this configuration is very similar to the motion node, with the exception that the state node performs a one-to-one mapping from controller groups to topics.  The motion node, in addition to this, can perform a one(topic) to many (groups) mapping.::
 
-```
         topic_list:
           - state
               group: <controller group#>
@@ -190,9 +190,6 @@ The yaml file will contain a list of structures that defines the joint trajector
               - status
                 - name: <topic name>
                 - ns: <topic namespace>
-```
- 
- 
  
 Todo's
 =========
@@ -204,9 +201,13 @@ The following items still need to be addressed:
  
 References
 ==========
-.. [1] Industrial robot driver spec (ROS API) ( http://wiki.ros.org/Industrial/Industrial_Robot_Driver_Spec ).
-.. [2] Google group discussion: Support for Dual-arm robots (https://groups.google.com/forum/#!topic/swri-ros-pkg-dev/LHrfVgEA4hs)
-.. [3] Industrial robot status message (Groovy) ( http://docs.ros.org/groovy/api/industrial_msgs/html/msg/RobotStatus.html ).
+.. [#rbt_clnt] ROS-Industrial robot client ( http://wiki.ros.org/industrial_robot_client )
+.. [#ros_api] Industrial robot driver spec (ROS API) ( http://wiki.ros.org/Industrial/Industrial_Robot_Driver_Spec ).
+.. [#moveit] MoveIt motion planning library ( http://moveit.ros.org )
+.. [#discuss] Google group discussion: Support for Dual-arm robots (https://groups.google.com/forum/#!topic/swri-ros-pkg-dev/LHrfVgEA4hs)
+.. [#traj_msg] Joint trajectory message definition ( http://wiki.ros.org/trajectory_msgs )
+.. [#simp_msg] ROS-Industrial simple message package ( http://wiki.ros.org/simple_message )
+.. [#rbt_stat] Industrial robot status message ( http://wiki.ros.org/industrial_msgs ).
 
 Copyright
 =========
