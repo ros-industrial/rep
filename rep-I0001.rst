@@ -142,7 +142,7 @@ The motion interface can be expressed as four variations:
  * Multi-Arm (Async) - Multiple arma are defined.  Multiple joint trajectories for each arm/motion group are received and sent to the controller in independent messages.  The controller receives the messages and performs asynchronous motion.  NOTE: Although this may look like syncronized motion there isn't a real time guarentee tha the waypoints across multiple groups are reached at the same time.
  * Multi-Arm (Sync & Async) - Combination of the two above operating modes.  
  
- .. image:: rep-XXXX/motion_interface.png
+ .. image:: rep-I0001/motion_interface.png
  
 Node Configuration
 ---------
@@ -168,7 +168,7 @@ The state interface is split into a joint state and robot status interface.  The
  * Joint State - A single controller message is split into N JointState messages.
  * Robot Status - A single controller message that contatins status information for each arm.
  
- .. image:: rep-XXXX/state_interface.png
+ .. image:: rep-I0001/state_interface.png
  
  
 Node Configuration
