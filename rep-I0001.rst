@@ -204,7 +204,7 @@ The following items still need to be addressed:
  * Topics and Services - The ROS API defines topics and services for receiving trajectories.  This should also be supported by the new nodes.
  * Controller/PC handshaking - Currently most robot/PC communications involves a handshake (either I received and processed the last message or the last message resulted in an error).  This results in robust communications and execution, but doubles the amount of latency in the system.  I think this is the appropriate design, but it may be up for discussion.
  * What to do about force/effort control.  It is not currently supported by many controllers, but may be in the future.  
- 
+ * What is the failure mechanism when an incomplete trajtory point is sent? impossible trajectory point (too fast, too much acceleration)?
  
  
 References
