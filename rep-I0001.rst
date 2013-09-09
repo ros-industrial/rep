@@ -1,6 +1,6 @@
 ::
     
-    REP: XXXX
+    REP: I0001
     Title: Industrial Robot Controller Motion/Status Interface (Version 2)
     Author: Shaun Edwards
     Status: Draft
@@ -13,6 +13,12 @@ Outline
 #. Abstract_
 #. Motivation_
 #. Definitions_
+#. Requirements_
+#. `Design Assumptions`_
+#. `Simple Message Structures`_
+#. `Motion Interface`_
+#. `State Interface`_
+#. `Todo's`_
 #. References_
 #. Copyright_
 
@@ -26,7 +32,7 @@ Definitions
 =========
 
 The following definitions are used throughout:
- * joint, axis - A single controllable item.  Typically a revolute or linear motion.
+ * joint, axis - A single controllable item.  Typically revolute(rotational) or linear motion.
  * group, motion group, arm - A group of joints or axes.  At the controller level these are non-overlapping (i.e. a joint can be in one and only one group.
  * synchronous motion - coordinated motion (at the real time level) of a group of joints
  * asynchronous motion - independent control of joints or groups.
@@ -43,7 +49,8 @@ Requirements
 The industrial robot controller motion interface shall meet the following requirements:
  * A single node shall act as the point of control (motion).  All trajectory topics shall be routed through this node to the controller.  This not only simplifies implementation (a controller communicates with a single client) but single point control is key tenant of safety and predictable systems.
  * It shall allow for synchronous and asynchronous control of single and multiple arms (i.e. a unified driver that allows for differerent types of control to be achieved dynamically without reconfiguration)
- * All incoming joint trajectories should be fully populated with position, velocity, accleration, and timing information [#traj_msg]_. (NOTE: Certain controllers may not require all data, but this will be different between controllers)
+ * All incoming joint trajectories should be fully populated with at least position, velocity, acceleration, and timing information [#traj_msg]_. (NOTE: Certain controllers may not require all data, but this will be different between controllers).
+ * Effort/force control shall be supported by the messaging structure but not required for robot motion control.  Most industrial platforms do not offer this capability.  This requirement allows for some level of future proofing and expansion in the future.
  * Joint groups shall be statically defined at the controller level.  ROS trajectories must define motion for all the joints in a group (NOTE: Some controllers have additional axes that aren't used by all robots.  In these cases the axes are ignored by the controller.  However, the motion node should be smart enough to reorder or shift joint values based on configuration data). 
  * Joint trajectories shall be executed one at a time.  Receipt of a new trajectory before the current trajectory is finished shall either result in a motion stop, followed by the execution of the new trajectory.
  * A single node shall publish joint/robot state information, utilizing a single common connection to the controller.
@@ -59,7 +66,7 @@ The following assumptions are inherient in the client/server design:
  
 Simple Message Structures
 =========
-The simple message package [#simp_msg]_ provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  If dynamic message are used, controller side servers should utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group and then handle the error cases when the simple message exceeds that amount.  By creating dynamic simple messages for motion and status, multiple arm control and monitoring can be achieved.
+The simple message package [#simp_msg]_ provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  If dynamic message are used, controller side servers should utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group) and then handle the error cases when the simple message exceeds that amount.  By creating dynamic simple messages for motion and status, multiple arm control and monitoring can be achieved.
 
 
 Dynamic Joint Point
@@ -110,7 +117,7 @@ The dynamic joint state is meant to mimic both the ROS JointState and FollowJoin
     
 Dynamic Group Status
 ---------
-The dynamic group status is meant to mimic both the ROS-I RobotStatus message.  See the RobotStatus message for field descriptions.::
+The dynamic group status is meant to mimic both the ROS-I RobotStatus message.  See the RobotStatus message[#rbt_stat]_ for field descriptions.::
 
     length: true message/data length 
     header: standard msg_type, comms_type, reply_code fields 
@@ -196,6 +203,7 @@ Todo's
 The following items still need to be addressed:
  * Topics and Services - The ROS API defines topics and services for receiving trajectories.  This should also be supported by the new nodes.
  * Controller/PC handshaking - Currently most robot/PC communications involves a handshake (either I received and processed the last message or the last message resulted in an error).  This results in robust communications and execution, but doubles the amount of latency in the system.  I think this is the appropriate design, but it may be up for discussion.
+ * What to do about force/effort control.  It is not currently supported by many controllers, but may be in the future.  
  
  
  
