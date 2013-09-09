@@ -78,14 +78,16 @@ The dynamic joint point is meant to mimic the ROS JointTrajectory message struct
     num_groups: # of motion groups included in this message 
     group 1: 
         id:   control-group ID for use on-controller 
-        num_joints: # of joints in this motion group 
-        sequence:
+        num_joints: # of joints in this motion group
         valid_fields: #bit field for following items
-        # length of the following items must match num_joints, order set by controller
-        positions[]
-        velocities[] 
-        accelerations[] 
-        effort[] 
+        trajectory_pt[]:
+            sequence:
+            # length of the following items must match num_joints, order set by controller
+            positions[]
+            velocities[] 
+            accelerations[] 
+            effort[] 
+            time_from_start
     group 2: ...
     
     
