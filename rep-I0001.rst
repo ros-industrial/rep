@@ -160,15 +160,15 @@ In order to support the various methods of control, the motion node must be some
 The yaml file will contain a list of structures that defines the joint trajectory topics as well as the mapping to the controller.::
 
         topic_list:
-          - name: <topic name>
-            ns: <topic namespace>
-            group: <controller group#>
-            joints:
-              - <joint_1>
-              - <joint_2>
-              - <joint_N>
-           - name: <topic name>
-             ns: ...
+         - name: <topic name>
+           ns: <topic namespace>
+           group: <controller group#>
+           joints:
+            - <joint_1>
+            - <joint_2>
+            - <joint_N>
+         - name: <topic name>
+           ns: ...
 
 State Interface
 =========
@@ -188,18 +188,19 @@ Similar to the motion interface, the state interface will require configuration.
 The yaml file will contain a list of structures that defines the joint trajectory/status topics as well as the mapping to the controller.  Note, this configuration is very similar to the motion node, with the exception that the state node performs a one-to-one mapping from controller groups to topics.  The motion node, in addition to this, can perform a one(topic) to many (groups) mapping.::
 
         topic_list:
-          - state
-              group: <controller group#>
-              - joint
-                - name: <topic name>
-                  ns: <topic namespace>
-                  joints:
-                    - <joint_1>
-                    - <joint_2>
-                    - <joint_N>
-              - status
-                - name: <topic name>
-                - ns: <topic namespace>
+         - state
+           group: <controller group#>
+            - joint
+             - name: <topic name>
+              ns: <topic namespace>
+               joints:
+                - <joint_1>
+                - <joint_2>
+                - <joint_N>
+         - status
+           - name: <topic name>
+           - ns: <topic namespace>
+           ...
  
 Todo's
 =========
