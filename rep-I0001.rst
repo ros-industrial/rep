@@ -201,6 +201,12 @@ The yaml file will contain a list of structures that defines the joint trajector
            - ns: <topic namespace>
            ...
  
+Backwards Compatibility
+=========
+This REP creates a new industrial robot client package that will not be backwards compaptible with the previous version.  This means that all servers will have to be rewritten to support this new client.  Because this REP does not change the ROS API (except for multi-arm considerations), the previous client/server versions can continue to be used as is.  Transition to the client/servers described by this REP can be a gradual process as the capabilities enabled by this new design are required.
+
+If incompatible client/server combinations are ever used, there is little risk of undesirable behavior.  Because the simple message base protocol is not changed by this REP, the client/server should recognize the new message types as undefined and ignore them.  
+
 Todo's
 =========
 The following items still need to be addressed:
