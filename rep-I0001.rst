@@ -41,7 +41,7 @@ The following definitions are used throughout:
 Motivation
 ==========
 
-The first version of the motion/status interface (loosely documented in code and wikis) worked well for single arm manipulators.  Multi-arm (asynchronous or syncronous) was not supported in a generic manor that could be used across all platforms [#discuss]_.  Some attempts were made to support multiple arms using the existing interface, but these often required multi-arm joint states which could exceed the max number of joints and did not allow for mixed multi-arm/single-arm motion.
+The first version of the motion/status interface (loosely documented in code and wikis) worked well for single arm manipulators.  Multi-arm (asynchronous or syncronous) was not supported in a generic manor that could be used across all platforms [#discuss]_.  Some attempts were made to support multiple arms using the existing interface, but these often required multi-arm joint states which could exceed the max number of joints and did not allow for mixed multi-arm/single-arm motion.  The intent of this REP is to define a new set of simple messages[#simp_msg]_ for multi-arm control.  These messages will replace existing motion control message (they will be depricated).  The approach taken in the REP is one that creates a new set of clients for robot motion.  The underlying simple message libraries will remain unchanged (except for  the addition of new messages).
 
 
 Requirements
@@ -67,7 +67,7 @@ The following assumptions are inherient in the client/server design:
  
 Simple Message Structures
 =========
-The simple message package [#simp_msg]_ provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  If dynamic message are used, controller side servers should utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group) and then handle the error cases when the simple message exceeds that amount.  By creating dynamic simple messages for motion and status, multiple arm control and monitoring can be achieved.
+The simple message package [#simp_msg]_ provides libraries for communicating with industrial robot controllers.  This includes connection handling libraries and message packing/unpacking capabilities.  The default robot connection is TCP/IP, although any method of transfering byte data is easily supported.  While not required, traditional message structures have been statically defined (i.e. fixed arrays).  This is because robot controllers cannot dynamically allocate memory.  If dynamic messages are used, controller side servers should utlize fixed size data that comply with some physical limitation (i.e. the controller can only handle ten axes in a single group) and then handle the error cases when the simple message exceeds that amount.  By creating dynamic simple messages for motion and status, multiple arm control and monitoring can be achieved.
 
 
 Dynamic Joint Point
@@ -78,11 +78,11 @@ The dynamic joint point is meant to mimic the ROS JointTrajectory message struct
     header: standard msg_type, comms_type, reply_code fields
     sequence:
     num_groups: # of motion groups included in this message 
-    group[]: # lenght of this array must match num_groups
+    group[]: # length of this array must match num_groups
         id:   control-group ID for use on-controller 
         num_joints: # of joints in this motion group
         valid_fields: #bit field for following items
-        # length of the following items must match num_joints, order set by controller
+        # length of the following items must match num_joints, order set by controller.  Invalid fields (see bit field above) are not included, resulting in a shorter message.
         positions[]
         velocities[] 
         accelerations[] 
@@ -98,11 +98,11 @@ The dynamic joint state is meant to mimic both the ROS JointState and FollowJoin
     header: standard msg_type, comms_type, reply_code fields
     sequence:
     num_groups: # of motion groups included in this message 
-    group[]: # lenght of this array must match num_groups
+    group[]: # length of this array must match num_groups
         id:   control-group ID for use on-controller 
         num_joints: # of joints in this motion group 
         valid_fields: #bit field for following items
-        # length of the following items must match num_joints, order set by controller
+        # length of the following items must match num_joints, order set by controller.  Invalid fields (see bit field above) are not included, resulting in a shorter message.
         positions[]
         velocities[] 
         accelerations[] 
@@ -122,9 +122,8 @@ The dynamic group status is meant to mimic both the ROS-I RobotStatus message.  
     length: true message/data length 
     header: standard msg_type, comms_type, reply_code fields 
     num_groups: # of motion groups included in this message 
-    group[]: # lenght of this array must match num_groups
+    group[]: # length of this array must match num_groups
         id:   control-group ID for use on-controller 
-        num_joints: # of joints in this motion group 
         mode:
         e_stopped:
         drives_powered:
@@ -142,21 +141,21 @@ Motion Interface
 
 Motion Downloading Vs Streaming
 ---------
-In the first version of the motion interface, some robots allowed motion streaming (ie. point by point) and others required motion downloading (i.e. entire trajectory).  This distinction was invisible to the user, as the ROS interface receives entire trajectories in a single message.  Motion download interfaces were created because it was thought that they would provide better (smoother and faster) motion, altough this hasn't been found to be true.  Dense trajectories resulted in the same slow, disjointed motion as motion streaming interfaces.  For the purposes of this second version, only streaming interfaces will be considered.  This simplifies the problem of switching between synchronous and asyncrounous motion.
+In the first version of the motion interface, some robots allowed motion streaming (ie. point by point) and others required motion downloading (i.e. entire trajectory).  This distinction was invisible to the user, as the ROS interface receives entire trajectories in a single message.  Motion download interfaces were created because it was thought that they would provide better (smoother and faster) motion, this hasn't been found to be true.  Dense trajectories resulted in the same slow, disjointed motion as motion streaming interfaces.  For the purposes of this second version, only streaming interfaces will be considered.  This simplifies the problem of switching between synchronous and asyncrounous motion.
 
 Motion Variants
 ---------
 The motion interface can be expressed as four variations:
  * Single Arm - Only a single arm group is defined, no synchronization required.
  * Multi-Arm (Sync) - Multiple arms are defined.  A single joint trajectory containing all joints is received and sent to the controller in a single simple message.  The controller receives the message and performs synchronized motion.
- * Multi-Arm (Async) - Multiple arma are defined.  Multiple joint trajectories for each arm/motion group are received and sent to the controller in independent messages.  The controller receives the messages and performs asynchronous motion.  NOTE: Although this may look like syncronized motion there isn't a real time guarentee tha the waypoints across multiple groups are reached at the same time.
+ * Multi-Arm (Async) - Multiple arma are defined.  Multiple joint trajectories for each arm/motion group are received and sent to the controller in independent messages.  The controller receives the messages and performs asynchronous motion.  NOTE: Although this may look like syncronized motion there isn't a real time guarantee tha the waypoints across multiple groups are reached at the same time.
  * Multi-Arm (Sync & Async) - Combination of the two above operating modes.  
  
  .. image:: rep-I0001/motion_interface.png
  
 Node Configuration
 ---------
-In order to support the various methods of control, the motion node must be somewhat dynamic/statically reconfigurable[see current parameters].  The node must be able to support subscriptions to multiple topics (all of the same type) as well as conversion from ROS group organizations to controller organization.  This mapping would look similar to the MoveIt controller manager[?].  
+In order to support the various methods of control, the motion node must be somewhat dynamic/statically reconfigurable[see current parameters].  The node must be able to support subscriptions to multiple topics (all of the same type) as well as conversion from ROS group organizations to controller organization.  This mapping would look similar to the MoveIt controller manager[#ctrl_mgr]_.  
 The yaml file will contain a list of structures that defines the joint trajectory topics as well as the mapping to the controller.::
 
         topic_list:
@@ -213,13 +212,14 @@ The following items still need to be addressed:
  
 References
 ==========
-.. [#rbt_clnt] ROS-Industrial robot client ( http://wiki.ros.org/industrial_robot_client )
+.. [#rbt_clnt] ROS-Industrial robot client ( http://wiki.ros.org/industrial_robot_client ).
 .. [#ros_api] Industrial robot driver spec (ROS API) ( http://wiki.ros.org/Industrial/Industrial_Robot_Driver_Spec ).
-.. [#moveit] MoveIt motion planning library ( http://moveit.ros.org )
-.. [#discuss] Google group discussion: Support for Dual-arm robots (https://groups.google.com/forum/#!topic/swri-ros-pkg-dev/LHrfVgEA4hs)
-.. [#traj_msg] Joint trajectory message definition ( http://wiki.ros.org/trajectory_msgs )
-.. [#simp_msg] ROS-Industrial simple message package ( http://wiki.ros.org/simple_message )
+.. [#moveit] MoveIt motion planning library ( http://moveit.ros.org ).
+.. [#discuss] Google group discussion: Support for Dual-arm robots (https://groups.google.com/forum/#!topic/swri-ros-pkg-dev/LHrfVgEA4hs).
+.. [#traj_msg] Joint trajectory message definition ( http://wiki.ros.org/trajectory_msgs ).
+.. [#simp_msg] ROS-Industrial simple message package ( http://wiki.ros.org/simple_message ).
 .. [#rbt_stat] Industrial robot status message ( http://wiki.ros.org/industrial_msgs ).
+.. [#ctrl_mgr] MoveIt simple controller manager ( http://moveit.ros.org/wiki/Executing_Trajectories_with_MoveIt!#Simple_MoveIt.21_Controller_Manager_Plugin ).
 
 Copyright
 =========
