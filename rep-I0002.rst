@@ -24,7 +24,7 @@ Outline
 Abstract
 ========
 
-This REP discusses the capability to develop joint-space trajectories for robotic arms for which a pre-existing cartesian path is defined. The cartesian path may be fully defined (6 DOF) or under-defined (< 6 DOF).
+This REP discusses the capability to plan joint-space trajectories for robotic arms for which a pre-existing cartesian path is defined. The cartesian path may be fully defined (6 DOF) or under-defined (< 6 DOF).
 
 Definitions
 =========
@@ -37,8 +37,9 @@ The following definitions are used throughout:
 Motivation
 ==========
 
-| Motion planners in ROS are primarily focused on joint-space planners that get the robot from state A to state B. The planners may create smooth, collision-free paths that may also hold a constraint along that path (e.g. holding a cup upright). 
-| In many industrial applications, the processes that industrial robots are employed for have a pre-determined cartesian path. This path typically has a defined position for each point. The path may require exact position and orientation, loose position and/or orientation, or even undefined orientation.
+ * Motion planners in ROS are primarily focused on joint-space planners that get the robot from state A to state B. The planners may create smooth, collision-free paths that may also hold a constraint along that path (e.g. holding a cup upright). 
+ * In many industrial applications, the processes that industrial robots are employed for have a pre-determined cartesian path. This path typically has a defined position for each point. The path may require exact position and orientation, loose position and/or orientation, or even undefined orientation.
+ * There does not currently exist a good planner implementation that solves this problem
 
 
 Requirements
@@ -47,11 +48,23 @@ Requirements
 The planner shall meet the following requirements:
  * Accept a list of cartesion points. Each point must have position fully defined, and may have up to 3 DOF orientation defined.
  * Tolerances on each DOF may be specified. Tolerances on positions must be reasonable (TODO what is reasonable?)
- * 
 
 
 Interface
 =========
+
+ * It is preferred that the planner is integrated with MoveIt. In the short term, the effort will be to use MoveIt libraries without creating an actual planner in MoveIt.
+ * The planner should use existing MoveIt infrastructure whenever possible.
+ * Inputs from ROS parameter server
+  * Robot information via URDF/SRDF
+  * End effector model (TODO how? a new urdf?)
+  * Objects in environment
+  * Default weights/parameters to be used by planner
+ * ROS services
+  * req - Cartesian path - (maybe a new type with) ``PoseArray path, PoseArray tolerance, JointTrajectoryPoint process_params``
+  * res - joint trajectory - JointTrajectory
+  
+
 
 Stratagies
 =========
@@ -67,6 +80,7 @@ Todo's
 =========
 The following items still need to be addressed:
  * What is a reasonable tolerance on position DOFs?
+ * Best way to input models (message, service, parameter server?)
  
 References
 ==========
