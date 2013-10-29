@@ -1,0 +1,74 @@
+::
+    
+    REP: I0002
+    Title: Planning for unconstrained cartesian paths
+    Author: Dan Solomon
+    Status: Draft
+    Type: Standards Track
+    Created: 29-October-2013
+
+Outline
+=======
+
+#. Abstract_
+#. Definitions_
+#. Motivation_
+#. Requirements_
+#. Interface_
+#. `Todo's`_
+#. References_
+#. Copyright_
+
+
+Abstract
+========
+
+This REP discusses the capability to develop joint-space trajectories for robotic arms for which a pre-existing cartesian path is defined. The cartesian path may be fully defined (6 DOF) or under-defined (< 6 DOF).
+
+Definitions
+=========
+
+The following definitions are used throughout:
+ * joint, axis - A single controllable item.  Typically revolute(rotational) or linear motion.
+ * joint trajectory - A set of joint points, where each joint point fully defines the position of the robot.
+
+Motivation
+==========
+
+Motion planners in ROS are primarily focused on joint-space planners that get the robot from state A to state B. The planners may create smooth, collision-free paths that may also hold a constraint along that path (e.g. holding a cup upright). Many processes that industrial robots are employed for have a pre-determined cartesian path. This path typically has a defined position for each point. The path may require exact position and orientation, loose position and/or orientation, or even undefined orientation (all or part).
+
+
+Requirements
+=========
+
+The planner shall meet the following requirements:
+ * 
+ 
+
+
+Interface
+=========
+
+Todo's
+=========
+The following items still need to be addressed:
+ * 
+ 
+References
+==========
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+ 
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:
