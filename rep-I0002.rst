@@ -39,7 +39,7 @@ Motivation
 
  * Motion planners in ROS are primarily focused on joint-space planners that get the robot from state A to state B. The planners may create smooth, collision-free paths that may also hold a constraint along that path (e.g. holding a cup upright). 
  * In many industrial applications, the processes that industrial robots are employed for have a pre-determined cartesian path. This path typically has a defined position for each point. The path may require exact position and orientation, loose position and/or orientation, or even undefined orientation.
- * There does not currently exist a good planner implementation that solves this problem
+ * There does not currently exist a good planner implementation that solves this problem of cartesian path planning in ROS.
 
 
 Requirements
@@ -47,7 +47,9 @@ Requirements
 
 The planner shall meet the following requirements:
  * Accept a list of cartesion points. Each point must have position fully defined, and may have up to 3 DOF orientation defined.
- * Tolerances on each DOF may be specified. Tolerances on positions must be reasonable (TODO what is reasonable?)
+ * Tolerances on each DOF may be specified.
+ * In order to generate a trajectory, the timing of each point must be specified.
+ * The cartesian path should have points located within a short distance of each other in order to ensure linear motion. Points that are outside this distance will have interpolated points inserted for planning. This means the joint trajectory may be larger than the cartesian path, but probably never smaller.
 
 
 Interface
@@ -70,7 +72,7 @@ Stratagies
 =========
 The current strategy:
  1. Find all joint-space solutions for each cartesian point (perform IK at each point). If the point is not fully defined, discretize the space into 6 DOF points and find all solutions for the discretized point.
- 2. Perform a graph search through each point to find the joint trajectory. User-defined callbacks may be used to define the cost of each movement.
+ 2. Perform graph search through each point to find the joint trajectory. User-defined callbacks may be used to define the cost of each movement.
  3. Stop when a solution is found, or store all paths that can be found.
  4. (optional) Perform smoothing on the trajectory. Smoothing will be under constraints defined by the process (e.g. hold position, hold orientation, speed, acceleration, etc.)
    
@@ -79,8 +81,8 @@ The current strategy:
 Todo's
 =========
 The following items still need to be addressed:
- * What is a reasonable tolerance on position DOFs?
  * Best way to input models (message, service, parameter server?)
+ * Try to fit planner to MoveIt planner plugin definition if possible.
  
 References
 ==========
