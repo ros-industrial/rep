@@ -30,18 +30,26 @@ Outline
 Abstract
 ========
 
+This REP describes the draft version of the ROS-Industrial extrinsic calibration package.  It is relevant to anyone using an industrial system which includes a vision component (i.e. camera).  This package will provide an optimal solution for the pose (extrinsics) of a camera or set of cameras given a generic system of static or moving targets and static or moving cameras.
+
 Specification
 =========
+Details on yaml input files to go here.
+Also describe CalibrationJob public functions?
 
 Motivation
 ==========
+Every industrial system with a vision component requires that this component have a known position in a common coordinate frame. Example of such systems are as follows: a camera setup to view a robot workspace requires the camera and the robot to share a common frame; a system of cameras controls a process and are required to be continuously calibrated; ... .To control for each scenerio there are several variables, such as the number of cameras, whether or not they are moving, the number of targets and whether or not they are moving, the number of targets within view, the number of cameras that can view a single target, and whether or not any of the positions of the targets are known. This feature takes these variations in scenario into account to provide a generalized solution for various industrial systems.
 
 Rationale
 ==========
 
 Definitions
 =========
-
+The following definitions are used throughout:
+ * extrinsics - 
+ * intrinsics - 
+ * parameter blocks - 
 
 Requirements
 =========
