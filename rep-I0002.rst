@@ -20,7 +20,6 @@ Outline
 #. `Simple Message Structures`_
 #. `Communications Method`_
 #. `Motion Interface`_
-#. `State Interface`_
 #. `Backwards Compatibility`_
 #. `Todo's`_
 #. `Reference Implementation`_
@@ -31,7 +30,45 @@ Outline
 Abstract
 ========
 
+Specification
+=========
 
+Motivation
+==========
+
+Rationale
+==========
+
+Definitions
+=========
+
+
+Requirements
+=========
+ 
+Design Assumptions
+========= 
+ 
+Simple Message Structures
+=========
+
+Communications Method
+========
+
+Motion Interface
+=========
+ 
+Backwards Compatibility
+=========
+
+Todo's
+=========
+ 
+Reference Implementation
+==========
+ 
+References
+==========
 Copyright
 =========
 
