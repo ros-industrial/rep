@@ -1,0 +1,48 @@
+::
+    
+    REP: I0002
+    Title: Industrial Systems Calibration Methods/Routine
+    Author: Christina Gomez
+    Status: Draft
+    Type: Standards Track
+    Created: 14-January-2014
+
+Outline
+=======
+
+#. Abstract_
+#. Specification_
+#. Motivation_
+#. Rationale_
+#. Definitions_
+#. Requirements_
+#. `Design Assumptions`_
+#. `Simple Message Structures`_
+#. `Communications Method`_
+#. `Motion Interface`_
+#. `State Interface`_
+#. `Backwards Compatibility`_
+#. `Todo's`_
+#. `Reference Implementation`_
+#. References_
+#. Copyright_
+
+
+Abstract
+========
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+ 
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:
