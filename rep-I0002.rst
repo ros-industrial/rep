@@ -36,8 +36,9 @@ Specification
 =========
 The code is currently set up to take three input yaml files. These files define the camera(s), target(s) and job parameters.
 The target.yaml file should contain a list of static and/or moving targets. The static target is defined by a name, it's pose (angle axis format of rotation ax, ay, az, and translations x, y, and z), the number of measurable points and a list of those points locations within that target. The moving target requires all the same information specified as the static target, but also a scene_id. Currently supported targets are Checkerboard and CircleGrid (symmetric of asymmetric, as defined by OpenCV). Targets planned for incorporation are AR tags. 
-Details on camera and cal_jobyaml input files to go here.
-Also describe CalibrationJob public functions?
+
+More details on camera and cal_job yaml input files to go here.
+
 
 Motivation
 ==========
