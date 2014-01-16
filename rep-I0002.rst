@@ -59,6 +59,14 @@ Scenerios where extrinsic calibration can be used
  * Camera to fixture
  * Robot to fixture
  
+Sensor Types
+ * Cameras
+ * Range finders
+ * Laser trackers
+ * Robot/Positioning system (Forward Kinematics)
+ * TODO: Complete list
+When appropriate (i.e. if it drastically improves calibration) a sensor model should be utilized as part of the optimization process.  For example, including the camera projection and it's associated error model can greatly increase the accuracy of a calibration.  Under such a model targets closer to the camera can be measure more accruatley than those that are further away.  By including this "model" in the optimization, a better calibration results.
+ 
 Target types
  * Fiducials(spheres, LEDs)
  * AR tags
