@@ -74,6 +74,8 @@ Target types
  * Circle patterns
  * TODO: Complete list
  
+The desired package should be implemented in a ROS agnostic fashion, such that it could be generically used in any piece of software(i.e with minimal dependencies).
+ 
 Design Assumptions
 ========= 
 
