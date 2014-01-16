@@ -1,0 +1,108 @@
+::
+    
+    REP: I0002
+    Title: Industrial Systems Calibration Methods/Routine
+    Author: Christina Gomez
+    Status: Draft
+    Type: Standards Track
+    Created: 14-January-2014
+
+Outline
+=======
+
+#. Abstract_
+#. Specification_
+#. Motivation_
+#. Rationale_
+#. Definitions_
+#. Requirements_
+#. `Design Assumptions`_
+#. `Simple Message Structures`_
+#. `Communications Method`_
+#. `Motion Interface`_
+#. `Backwards Compatibility`_
+#. `Todo's`_
+#. `Reference Implementation`_
+#. References_
+#. Copyright_
+
+
+Abstract
+========
+
+This REP describes the draft version of the ROS-Industrial extrinsic calibration package.  It is relevant to anyone using an industrial system which includes a vision component (i.e. camera).  This package will provide an optimal solution for the pose (extrinsics) of a camera or set of cameras given a generic system of static or moving targets and static or moving cameras.
+
+Specification
+=========
+The code is currently set up to take three input yaml files. These files define the camera(s), target(s) and job parameters.
+The target.yaml file should contain a list of static and/or moving targets. The static target is defined by a name, it's pose (angle axis format of rotation ax, ay, az, and translations x, y, and z), the number of measurable points and a list of those points locations within that target. The moving target requires all the same information specified as the static target, but also a scene_id. Currently supported targets are Checkerboard and CircleGrid (symmetric of asymmetric, as defined by OpenCV). Targets planned for incorporation are AR tags. 
+
+More details on camera and cal_job yaml input files to go here.
+
+
+Motivation
+==========
+Every industrial system with a vision component requires that this component have a known position in a common coordinate frame. To control for each scenerio there are several variables, such as the number of cameras, whether or not they are moving, the number of targets and whether or not they are moving, the number of targets within view, the number of cameras that can view a single target, and whether or not any of the positions of the targets are known. This feature takes these variations in scenario into account to provide a generalized solution for various industrial systems.
+Example of such systems are as follows: 
+ * A camera setup to view a robot workspace requires the camera and the robot to share a common frame; 
+ * A system of cameras controls a process and are required to be continuously calibrated; 
+ 
+Scenerios where extrinsic calibration can be used
+ * Camera to camera
+ * Camera to Robot
+ * Camera to reference system
+ * Robot to reference system
+ * Camera to fixture
+ * Robot to fixture
+
+Rationale
+==========
+
+Definitions
+=========
+The following definitions are used throughout:
+ * extrinsics - 6 camera parameters defining the camera position in space, specificially with rotation as a Rodriques’ axis-angle vector[ax, ay, az], and translation as vector [x, y, z]
+ * intrinsics - 9 camera parameters defining the internal structure of the camera, specifically focal lengths (fx, fy), pixel centers (cx, cy) and 5 distortion parameters (k1, k2, k3, p1, p2)
+ * parameter blocks - a structure used to interface with google ceres
+ * target - The pattern (checkerboard/circle grid) with known point positions (checkerboard corners, circle grid circle centers, etc.)
+
+Requirements
+=========
+ 
+Design Assumptions
+========= 
+ 
+Simple Message Structures
+=========
+
+Communications Method
+========
+
+Motion Interface
+=========
+ 
+Backwards Compatibility
+=========
+
+Todo's
+=========
+ 
+Reference Implementation
+==========
+ 
+References
+==========
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+ 
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:
