@@ -11,16 +11,12 @@ Outline
 =======
 
 #. Abstract_
-#. Specification_
 #. Motivation_
-#. Rationale_
 #. Definitions_
 #. Requirements_
 #. `Design Assumptions`_
-#. `Simple Message Structures`_
-#. `Communications Method`_
-#. `Motion Interface`_
-#. `Backwards Compatibility`_
+#. Specification_
+#. Rationale_
 #. `Todo's`_
 #. `Reference Implementation`_
 #. References_
@@ -48,7 +44,7 @@ The following definitions are used throughout:
 Requirements
 =========
 
-To control for each scenerio there are several variables, such as the number of sensors, whether or not they are moving, the number and types of targets and whether or not they are moving, the number of targets within view, the number of sensors that can view a single target, and whether or not any of the positions of the targets are known. 
+To control for each scenario there are several variables, such as the number of sensors, whether or not they are moving, the number and types of targets and whether or not they are moving, the number of targets within view, the number of sensors that can view a single target, and whether or not any of the positions of the targets are known. 
 This package must take these variations in scenario into account to provide a generalized solution for various industrial systems
 
 Example of such systems are as follows: 
