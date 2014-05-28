@@ -1,0 +1,101 @@
+::
+    
+    REP: I0003
+    Title: Cartesian Path Planner Interface Pipeline
+    Author: Shaun Edwards, Dan Solomon, Jorge Nicho, Chris Lewis, Paul Hvass, Jeremy Zoss, Clay Flannigan
+    Status: Draft
+    Type: ??
+    Created: 23-May-2014
+
+Outline
+=======
+
+#. Abstract_
+#. Motivation_
+#. Definitions_
+#. Requirements_
+#. `Design Assumptions`_
+#. Specification_
+#. Rationale_
+#. `Todo's`_
+#. `Reference Implementation`_
+#. References_
+#. Copyright_
+
+
+Abstract
+========
+
+This REP describes the interface for a MoveIt based Cartesian path planner.  It is relevant to anyone using MoveIt or ROS to plan robot motion for which a cartesian path has already been defined.  This pipeline will provide a structure by which planners and filters are utilized to transform a Cartesian path plan into a joint path plan.  This pipeline differs from standard inverse kinematics approaches in that the Cartesian path need not be fully defined, as is often the case with industrial processes.
+
+Motivation
+==========
+The current MoveIt/ROS interfaces are focused on pick and place applications.  In the typical pick and place application, the starting and goal positions are the only input to path planners.  In contrast, many industrial applications must follow a pre-defined Cartesian path, where not only do the start and end position matter, but the path in between does as well.  Some common examples of this are, painting, machining, and welding.  Unfortunately, solving the Cartesian path planning problem by simply applying an inverse kinematics solution results in a limited solution set that doesn't take advantage of the application flexibility.  In reality, Cartesian paths are typically semi-constrained.  For example, in a machining application a five degree of freedom(5DOF) path is required, where the sixth DOF, the orientation about the tool, is not defined.  Path planners that fail to take advantage of these open constraints, such as inverse kinematics (IK) based planners, limit the likelihood of finding a valid solution, even though one could exist in the semi-constrained space.
+
+
+Definitions
+=========
+The following definitions are used throughout:
+ * semi-constrained path - a path in which at least part of the path has some allowance for variation.
+
+Requirements
+=========
+ * At a high level, the pipeline shall take a semi-constrained Cartesian path as input and output a joint trajectory for manipulator execution.
+ * The pipeline shall have a ROS and C++ API.  The ROS API should support the most common use cases, but can be more limited than the full C++ API
+ * The pipeline structure should be implemented in an abstract manor, such that steps within the pipeline can be overridden with custom functionality.  NOTE: This can be accomplished using traditional object oriented techniques.  Use of plugins is not a requirement (at this time).
+
+Design Assumptions
+========= 
+
+Specification
+=========
+
+ROS API
+=========
+The ROS API defines the topics, services, actions, and parameters by which external ROS nodes can interact with the pipeline.
+
+The definition of a process path plan is a key concept in the ROS API (as well as other APIs).  A process path plan defines the waypoints and segments for a path.  Each waypoint shall be defined by a set of constraints.  
+**Process Path Definition**
+::
+
+    TODO: Should follow MoveIt constraint structures (this might require changes to MoveIt)
+
+    Process Path:
+        waypoint[N]
+            constraints[K]
+                ??
+                ref frame
+                tcp frame
+                process parameters[]
+        segment[N-1]
+            type (linear, joint, circular)
+            acceleration
+            velocity
+   
+
+Rationale
+==========
+
+Todo's
+=========
+ 
+Reference Implementation
+==========
+ 
+References
+==========
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+ 
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:
