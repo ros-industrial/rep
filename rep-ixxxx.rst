@@ -197,8 +197,8 @@ The main purpose of the Simple Message IO protocol extension is to
 allow access to the IO facilities of an industrial robot controller.
 Similar to the motion interface, this will be facilitated by running
 a server component on the controller, and a client component on the
-ROS side. The IO server component - implemented in the native language
-of the controller - could either be made an extension to an already
+ROS side. The IO server component – implemented in the native language
+of the controller – could either be made an extension to an already
 running ROS-Industrial server component, or be made to run as a
 separate task.
 In all cases, the server is responsible for listening for incoming
@@ -224,8 +224,8 @@ Profiles
 The IO operations described in this REP have been grouped into
 *profiles*: sets of related functionality that servers may implement
 support for. Not all profiles are required: a driver can claim generic
-IO capabilities when at least the minimum set of operations --
-synchronous read and write, the *Basic* profile -- has been
+IO capabilities when at least the minimum set of operations –
+synchronous read and write, the *Basic* profile – has been
 implemented. This approach was chosen to ensure that the extension
 could be supported on as wide a selection of industrial controllers as
 possible, even if some profiles may require interaction with IO
@@ -259,7 +259,8 @@ contiguous, the server reports on groups of Elements, collected into
 *ranges*, instead of individual Elements. Each range has an associated
 feature descriptor, which encodes whether the server supports a
 certain feature or not for that range (ie: analogue Elements may be
-resettable, digital may not be).
+resettable, digital may not be). In addition, a global descriptor is
+used to report on features that are not range or type specific.
 
 
 Addressing
@@ -271,8 +272,8 @@ table to implement the mapping between ``type`` identifiers and the
 IO interfaces they represent (`Generic IO Type Identifiers`_). This
 table is expected to be small and to be static (as supported IO
 interfaces are only expected to change when the (hardware)
-configuration of the controller changes). Element indices - within IO
-types - are unique, with support for gaps provided by ranging.
+configuration of the controller changes). Element indices – within IO
+types – are unique, with support for gaps provided by ranging.
 
 Support for named Elements is not part of the protocol extension
 described in this REP. See `Default to Named IO`_ in the Alternatives_
@@ -357,15 +358,15 @@ Overview
 The following message structures are defined in this section::
 
   Basic Profile
-   IO_INFO
-   IO_READ
-   IO_WRITE
+    IO_INFO
+    IO_READ
+    IO_WRITE
 
   Optional Profiles
-   Reset
-    IO_RESET
+    Reset
+      IO_RESET
 
-   Streaming
+  Streaming
     IO_STREAM_SUB
     IO_STREAM_UNSUB
     IO_STREAM_PUB
@@ -448,14 +449,18 @@ Reply::
 
 Defined bit positions in ``ctrlr_feat_mask`` are::
 
-  0  Controller Local Timestamps
+  Pos  Description
+
+    0  Controller Local Timestamps Support
 
 All other positions are reserved for future use.
 
 Defined bit positions in ``feat_mask`` are::
 
-  0  IO Reset Support
-  1  Streaming Support
+  Pos  Description
+
+    0  IO Reset Support
+    1  Streaming Support
 
 All other positions are reserved for future use.
 
@@ -538,12 +543,14 @@ Notes
 #. Refer to section `Status and Error Codes`_ for a list of all
    defined error and status codes.
 #. The value of the ``result`` field shall reflect the outcome of the
-   requested operation. The *Errors* subsection of each message
-   definition lists the possible return values. For messages that
-   support batching of operations, a per-IO ``result`` field is to be
-   used, in addition to the ``reply_code`` field in the ROS-I header.
-   Whenever both a per-type and a per-IO return value is defined, the
-   per-IO value should be returned.
+   requested operation. If not equal to ``SUCCESS``, the *Errors*
+   subsection of each message definition lists the possible return
+   values. For messages that support batching of operations, the
+   result of each individual operation shall be reflected by the
+   ``result`` field in the returned array, in addition to the
+   ``reply_code`` field in the ROS-I header. Whenever both a per-type
+   and a per-Element return value is defined by this REP, the
+   per-Element value should be returned.
 #. The value of the ``value`` field is undefined in case the
    read operation was unsuccessful (ie: ``result`` is not equal to
    ``SUCCESS``).
@@ -673,12 +680,12 @@ Errors
 Notes
 
 #. Clients may request a reset of all IO Elements by sending a request
-   with a single (1) element, specifying a value of -1 for both the
-   ``type`` and the ``index`` fields.
+   with a single (1) element, specifying a value of ``0xFFFF`` for
+   both the ``type`` and the ``index`` fields.
 #. Clients may request a reset of all defined ranges for a specific
-   IO type by sending a request with a value of -1 for the ``index``
-   field, and the ``type`` field set to the value corresponding to the
-   IO type (see `Generic IO Type Identifiers`_).
+   IO type by sending a request with a value of ``0xFFFF`` for the
+   ``index`` field, and the ``type`` field set to the value
+   corresponding to the IO type (see `Generic IO Type Identifiers`_).
 
 
 Streaming Interface (optional)
@@ -749,7 +756,7 @@ Notes
 #. Servers should fail requests for subscriptions to ranges which
    include IO Elements not contained in any of the defined IO ranges
    (as reported by the ``IO_INFO`` response message). Clients should
-   avoid trying to subscribe to any IO Elements not contained in any
+   avoid trying to subscribe to IO Elements not contained in any
    valid range by checking against known ranges prior to sending a
    request.
 
@@ -758,9 +765,10 @@ IO_STREAM_UNSUB
 ^^^^^^^^^^^^^^^
 
 Upon reception of this message, servers shall cancel the
-subscriptions for the specified ranges. Any subsequent `IO_STREAM_PUB`
-messages shall not include the state of Elements in the unsubscribed
-ranges. Multiple ranges may be unsubscribed in one request.
+subscriptions for the specified ranges. Any subsequent
+``IO_STREAM_PUB`` messages shall not include the state of Elements in
+the unsubscribed ranges. Multiple ranges may be unsubscribed in one
+request.
 
 Clients shall identify ranges by providing the index of the IO Element
 that forms the start of the range, and the IO type for each range.
@@ -798,7 +806,7 @@ Errors
 
 Notes
 
- - None
+- None
 
 
 IO_STREAM_PUB
@@ -1069,7 +1077,7 @@ Such a layer would facilitate switching between controllers, as IO
 references can be rewired by simply changing names and connections.
 
 There are however several significant drawbacks to the use of a name
-based addressing scheme -- at the Simple Message layer -- which lead
+based addressing scheme – at the Simple Message layer – which lead
 to this alternative being rejected.
 
 First, depending on the actual naming scheme, named references can
@@ -1110,8 +1118,8 @@ controller). This restriction would make it impossible to implement a
 server application that dynamically addresses IO Elements based on
 message contents without relying on a look-up table again.
 
-Finally, the main advantages of Named IO -- semantic naming, rewiring
--- can be supported on the ROS API level, either with currently
+Finally, the main advantages of Named IO – semantic naming, rewiring –
+can be supported on the ROS API level, either with currently
 existing mechanisms in ROS or with new functionality provided by the
 client(s).
 
@@ -1126,7 +1134,7 @@ sizes, the client places only numerical IDs and indices in the
 serialised payloads (such as those defined in
 `Generic IO Type Identifiers`_). The mapping between names and indices
 would be done via a look-up table on the client side, using
-``name -> (type, index)`` pairs. Names recognised by the client are
+``name → (type, index)`` pairs. Names recognised by the client are
 those configured on the server.
 
 While this approach would allow all of the benefits described in the
