@@ -19,8 +19,8 @@ Outline
 #. Assumptions_
 #. `Assigned Message Types`_
 
-  #. `Standard Messages`_
-  #. `Vendor Specific Ranges`_
+   #. `Standard Messages`_
+   #. `Vendor Specific Ranges`_
 
 #. References_
 #. `Revision History`_
