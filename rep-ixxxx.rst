@@ -7,7 +7,7 @@
   Type: Standards Track
   Content-Type: text/x-rst
   Created: 01-Jun-2014
-  Post-History: 15-Aug-2014
+  Post-History: 15-Aug-2014, 08-Oct-2014
 
 
 Outline
@@ -93,31 +93,52 @@ the standardised Simple Message message set. In addition, reserved
 and special ranges are indicated::
 
 
-  ID                 Name                  Comment
+  ID                 Name                         Comment
 
-                  0  -                     Reserved
+                  0  -                            Reserved
 
-                  1  PING                  -
+                  1  PING                         -
 
-                2-9  -                     Reserved for future use
+                2-9  -                            Reserved for future use
 
-                 10  JOINT_POSITION        Deprecated, also 'JOINT'
-                 11  JOINT_TRAJ_PT         -
-                 12  JOINT_TRAJ            -
-                 13  STATUS                -
-                 14  JOINT_TRAJ_PT_FULL    -
-                 15  JOINT_FEEDBACK        -
+                 10  JOINT_POSITION               Deprecated, also 'JOINT'
+                 11  JOINT_TRAJ_PT                -
+                 12  JOINT_TRAJ                   -
+                 13  STATUS                       -
+                 14  JOINT_TRAJ_PT_FULL           -
+                 15  JOINT_FEEDBACK               -
 
-              16-19  -                     Reserved for future use
+              16-19  -                            Reserved for future use
 
-                 20  READ_INPUT            Deprecated
-                 21  WRITE_OUTPUT          Deprecated
+                 20  READ_INPUT                   Deprecated
+                 21  WRITE_OUTPUT                 Deprecated
 
-             22-999  -                     Reserved for future use
+             22-999  -                            Reserved for future use
 
-          1000-2999  -                     Vendor specific
+          1000-2999  -                            Vendor specific
 
-    3000-2147483647  -                     Reserved for future use
+         3003-65000  -                            Reserved for future use
+
+        65001-65535  -                            Freely assignable
+
+   65536-2147483647  -                            Reserved for future use
+
+Note that [#simple_message]_ defines the ``msg_type`` field as a
+signed 32 bit integer, but only positive values will be considered
+valid identifiers in the context of this REP and the protocol's
+implementation.
+
+The IDs allocated to the *Manufacturer specific* range may be
+used by driver authors to add messages that are too specialised
+to be included in the generic industrial robot client. Note that the
+standard robot client will not be able to decode messages using these
+identifiers, and driver authors are expected to provide an extended
+version of the client able to decode messages with manufacturer
+specific message identifiers.
+
+All identifiers allocated to the *Freely assignable* range may be
+freely used by users and allows for ID assignment within a limited
+scope (ie: per project).
 
 
 Vendor Specific Ranges
@@ -126,10 +147,44 @@ Vendor Specific Ranges
 The following table lists vendor assigned specific ranges::
 
 
-  ID                 Vendor                Comment
+  ID                 Vendor                       Comment
 
-          1000-1999  SwRI                  -
-          2000-2999  Motoman               -
+          1000-1999  SwRI                         -
+          2000-2999  Motoman                      -
+
+See the next sections for a listing of all assigned message
+identifiers within these vendor specific ranges.
+
+
+Vendor Specific Messages
+------------------------
+
+SwRI
+^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1000-1999  -                                     Reserved for future use
+
+
+Motoman
+^^^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+      2001  MOTOMAN_MOTION_CTRL                   -
+      2002  MOTOMAN_MOTION_REPLY                  -
+
+ 2003-2015  -                                     Reserved for future use
+
+      2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    -
+      2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        -
+
+ 2018-2999  -                                     Reserved for future use
 
 
 References
@@ -144,6 +199,7 @@ Revision History
 
 ::
 
+  2014-10-08  Updated Vendor specific sections with identifiers currently in use
   2014-06-01  Initial revision
 
 
