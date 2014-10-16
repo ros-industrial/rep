@@ -68,17 +68,23 @@ range to the standard set should be addressed to the ROS-Industrial
 mailing list.
 
 Applications are expected to contain a short description of the
-message type, its name, intended use and its merit. After a short
-review period a voting round will be held on the mailing list.
-Both ROS-Industrial developers and users are eligible to vote.
-Acceptance of a new message type is then followed by an update of
-this REP.
+message type, its name, intended use and its merit. For a reassignment
+or migration, a rationale should be provided as to why the current
+assignment should be changed.
+
+After a three week review period a voting round will be held on the
+mailing list. Both ROS-Industrial developers and users are eligible
+to vote. In an ex aequo situation, ROS-Industrial developers may force
+a decision.
+
+Finally, the proposed changes are only final after the submission and
+incorporation of an update to this REP.
 
 
 Assumptions
 ===========
 
-#. All message type identifiers are specified in base-ten (decimal)
+#. All message type identifiers are specified in decimal (base-ten)
    notation.
 
 
@@ -89,8 +95,8 @@ Standard Messages
 -----------------
 
 The following table lists all type identifiers for messages part of
-the standardised Simple Message message set. In addition, reserved
-and special ranges are indicated::
+the standardised Simple Message message set. In addition, special
+and reserved ranges are indicated::
 
 
   ID                 Name                         Comment
@@ -128,23 +134,24 @@ signed 32 bit integer, but only positive values will be considered
 valid identifiers in the context of this REP and the protocol's
 implementation.
 
-The IDs allocated to the *Manufacturer specific* range may be
-used by driver authors to add messages that are too specialised
-to be included in the generic industrial robot client. Note that the
-standard robot client will not be able to decode messages using these
-identifiers, and driver authors are expected to provide an extended
-version of the client able to decode messages with manufacturer
-specific message identifiers.
+The IDs allocated to the *Vendor specific* range may be used by driver
+authors to add messages that are too specialised to be included in the
+generic industrial robot client. Note that the standard robot client
+nodes will not be able to decode messages using these identifiers,
+and driver authors are expected to provide an extended version of the
+client able to decode messages with vendor specific message
+identifiers.
 
 All identifiers allocated to the *Freely assignable* range may be
 freely used by users and allows for ID assignment within a limited
-scope (ie: per project).
+scope (ie: per project). These messages will also not be decodable
+by the standard robot client nodes.
 
 
 Vendor Specific Ranges
 ----------------------
 
-The following table lists vendor assigned specific ranges::
+The following table lists assigned vendor specific ranges::
 
 
   ID                 Vendor                       Comment
