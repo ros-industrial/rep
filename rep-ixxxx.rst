@@ -31,8 +31,8 @@ Abstract
 ========
 
 This REP documents Simple Message message type identifiers that are
-part of the official protocol specification. Both the standard set --
-supported by the generic clients in the ``simple_message` package --
+part of the official protocol specification. Both the standard set –
+supported by the generic clients in the ``simple_message`` package –
 as well as the vendor specific messages are listed. It further
 describes procedures for requesting assignment of new identifiers and
 for keeping this document up-to-date.
@@ -95,8 +95,8 @@ preference for a certain identifier (or range of identifiers), such a
 request may be considered, provided sufficient rationale is given.
 
 It is not possible for anyone to claim an identifier (or range of
-identifiers) without sending an accompanying RFA -- containing all
-required sections and information -- to the ROS-Industrial mailing
+identifiers) without sending an accompanying RFA – containing all
+required sections and information – to the ROS-Industrial mailing
 list. During review, any requested identifiers will have a pending
 status. Allocation will be made final only on acceptance of the RFA
 (and subsequent update of this document, as described in the
@@ -185,7 +185,8 @@ by the standard robot client nodes.
 Vendor Specific Ranges
 ----------------------
 
-The following table lists assigned vendor specific ranges::
+All vendor ranges have a length of 100 identifiers. The following
+table lists assigned vendor specific ranges::
 
 
   ID                 Vendor                       Comment
@@ -193,8 +194,6 @@ The following table lists assigned vendor specific ranges::
           1000-1099  SwRI                         -
           2000-2099  Motoman                      -
 
-
-All vendor ranges have a length of 100 identifiers.
 
 See the next sections for a listing of all assigned message
 identifiers within these vendor specific ranges.
@@ -259,7 +258,10 @@ Revision History
 
 ::
 
-  2014-10-08  Updated Vendor specific sections with identifiers currently in use
+  2014-11-19  Reduced length of assigned vendor specific ranges from
+              1000 to 100 identifiers
+  2014-10-08  Updated Vendor specific sections with identifiers
+              currently in use
   2014-06-01  Initial revision
 
 
