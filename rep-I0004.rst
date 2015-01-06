@@ -133,7 +133,6 @@ and reserved ranges are indicated::
                   0  -                            Reserved
 
                   1  PING                         -
-                  
                   2  GET_VERSION                  Retrieve version of the current driver
 
                 3-9  -                            Reserved for future use
@@ -264,9 +263,10 @@ Revision History
 
 ::
 
-  2015-01-06  Added message identifier GET_VERSION.
-              Added Motoman specific message identifiers for 
-              SINGLE_IO control which were implemented in v1.2.4.
+  2015-01-06  Added message identifier for GET_VERSION.
+              Added Motoman specific message identifiers for SINGLE_IO
+              control which were implemented in v1.2.4 of the MotoROS 
+              driver.
   2014-11-19  Reduced length of assigned vendor specific ranges from
               1000 to 100 identifiers
   2014-10-08  Updated Vendor specific sections with identifiers
