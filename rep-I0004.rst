@@ -7,7 +7,7 @@
   Type: Process
   Content-Type: text/x-rst
   Created: 01-Jun-2014
-  Post-History: 15-Aug-2014, 08-Oct-2014, 19-Nov-2014
+  Post-History: 15-Aug-2014, 08-Oct-2014, 19-Nov-2014, 06-Jan-2015
 
 
 Outline
@@ -133,8 +133,10 @@ and reserved ranges are indicated::
                   0  -                            Reserved
 
                   1  PING                         -
+                  
+                  2  GET_VERSION                  Retrieve version of the current driver
 
-                2-9  -                            Reserved for future use
+                3-9  -                            Reserved for future use
 
                  10  JOINT_POSITION               Deprecated, also 'JOINT'
                  11  JOINT_TRAJ_PT                -
@@ -221,8 +223,12 @@ Motoman
 
       2001  MOTOMAN_MOTION_CTRL                   -
       2002  MOTOMAN_MOTION_REPLY                  -
+      2003  MOTOMAN_READ_SINGLE_IO                -
+      2004  MOTOMAN_READ_SINGLE_IO_REPLY          -
+      2005  MOTOMAN_WRITE_SINGLE_IO               -
+      2006  MOTOMAN_WRITE_SINGLE_IO_REPLY         -
 
- 2003-2015  -                                     Reserved for future use
+ 2007-2015  -                                     Reserved for future use
 
       2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    -
       2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        -
@@ -258,6 +264,9 @@ Revision History
 
 ::
 
+  2015-01-06  Added message identifier GET_VERSION.
+              Added Motoman specific message identifiers for 
+              SINGLE_IO control which were implemented in v1.2.4.
   2014-11-19  Reduced length of assigned vendor specific ranges from
               1000 to 100 identifiers
   2014-10-08  Updated Vendor specific sections with identifiers
