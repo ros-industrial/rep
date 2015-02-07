@@ -151,9 +151,9 @@ and reserved ranges are indicated::
 
              22-999  -                            Reserved for future use
 
-          1000-1099  -                            Vendor specific
+          1000-1499  -                            Vendor specific
 
-          1100-1999  -                            Reserved for future use
+          1500-1999  -                            Reserved for future use
 
           2000-2099  -                            Vendor specific
 
@@ -193,6 +193,10 @@ table lists assigned vendor specific ranges::
   ID                 Vendor                       Comment
 
           1000-1099  SwRI                         -
+          1100-1199  Universal Robot              -
+          1200-1299  Adept                        -
+          1300-1399  ABB                          -
+          1400-1499  Fanuc                        -
           2000-2099  Motoman                      -
 
 
@@ -211,6 +215,46 @@ SwRI
   ID        Name                                  Comment
 
  1000-1099  -                                     Reserved for future use
+
+
+Universal Robot
+^^^^^^^^^^^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1100-1199  -                                     Reserved for future use
+
+
+Adept
+^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1200-1299  -                                     Reserved for future use
+
+
+ABB
+^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1300-1399  -                                     Reserved for future use
+
+
+Fanuc
+^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1400-1499  -                                     Reserved for future use
 
 
 Motoman
@@ -263,6 +307,8 @@ Revision History
 
 ::
 
+  2015-01-14  Added Vendor Specific Ranges for all currently supported
+              robot platforms.
   2015-01-06  Added message identifier for GET_VERSION.
               Added Motoman specific message identifiers for SINGLE_IO
               control which were implemented in v1.2.4 of the MotoROS 
