@@ -1,0 +1,71 @@
+::
+
+  REP: I0005
+  Title: Cartesian Motion Extensions for the Simple Message Protocol
+  Author: Fred Proctor <proctor@nist.gov> and Tre Harrison <william.harrison@nist.gov>
+  Status: Active
+  Type: Process
+  Content-Type: text/x-rst
+  Created: 20-May-2015
+  Post-History: 20-May-2015
+
+Outline
+=======
+
+#. Abstract_
+#. Motivation_
+#. `Application Procedure`_
+#. Assumptions_
+#. `Assigned Message Identifiers`_
+
+   #. `Standard Messages`_
+   #. `Vendor Specific Ranges`_
+
+#. References_
+#. `Revision History`_
+#. Copyright_
+
+Abstract
+========
+
+This REP documents extensions to the Simple Message type identifiers
+that support Cartesian motion, and the reporting of information about
+objects in the robot's workspace.
+
+Motivation
+==========
+
+This document provides the normative reference for assigned message
+type identifiers for the Cartesian motion requests, replies, and status.
+
+Message Specifications
+============================
+
+Cartesian Move Request
+----------------------
+
+Cartesian Move Reply
+--------------------
+
+Cartesian Move Status
+---------------------
+
+References
+==========
+
+.. [#simple_message] ROS-Industrial simple_message package, ROS Wiki, on-line, retrieved 1 June 2014
+   (http://wiki.ros.org/simple_message)
+
+
+Revision History
+================
+
+::
+
+  2015-05-20  Initial revision
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
