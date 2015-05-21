@@ -1,26 +1,23 @@
 ::
 
-  REP: I0005
-  Title: Cartesian Motion Extensions for the Simple Message Protocol
-  Author: Fred Proctor <proctor@nist.gov> and Tre Harrison <william.harrison@nist.gov>
-  Status: Active
-  Type: Process
-  Content-Type: text/x-rst
-  Created: 20-May-2015
-  Post-History: 20-May-2015
+   REP: I0005
+   Title: Cartesian Motion Extensions for the Simple Message Protocol
+   Authord: Fred Proctor <proctor@nist.gov> and Tre Harrison <william.harrison@nist.gov>
+   Status: Active
+   Type: Process
+   Content-Type: text/x-rst
+   Created: 20-May-2015
+   Post-History: 20-May-2015
 
 Outline
 =======
 
 #. Abstract_
 #. Motivation_
-#. `Application Procedure`_
-#. Assumptions_
-#. `Assigned Message Identifiers`_
-
-   #. `Standard Messages`_
-   #. `Vendor Specific Ranges`_
-
+#. `Message Specfications`_
+#. `Cartesian Move Request`_
+#. `Cartesian Move Reply`_
+#. `Cartesian Move State`_
 #. References_
 #. `Revision History`_
 #. Copyright_
@@ -28,27 +25,97 @@ Outline
 Abstract
 ========
 
-This REP documents extensions to the Simple Message type identifiers
+This REP documents extensions to the Simple Message protocol
 that support Cartesian motion, and the reporting of information about
 objects in the robot's workspace.
 
 Motivation
 ==========
 
-This document provides the normative reference for assigned message
-type identifiers for the Cartesian motion requests, replies, and status.
+The Simple Mesage protocol defines a low-level interface to robot
+controllers that can easily be implemented. Together with reference
+implementations of Robot Operating System (ROS) trajectory planners,
+Simple Message provides a way for robot vendors to quickly provide
+baseline ROS functionality to their systems. 
+
+Simple Message is a joint-level interface that requires the external
+system to perform the inverse kinematics calculations. Robot
+controllers typically provide this function internally, and the
+proposed extensions enable external systems to benefit from the
+vendor's built-in kinematics. 
+
+The extensions also include messages for reporting the location and
+other information about objects in the robot's immediate environment
+that may be tracked using built-in capabilities of the robot
+controller. 
 
 Message Specifications
 ============================
 
 Cartesian Move Request
 ----------------------
+A Cartesian move message requests that the robot move to the specified
+Cartesian position and quaternion orientation along a straight line
+and about a fixed rotational axis. The translational speed applies to
+the motion along the straight line. The rotational speed applies to
+the motion about the fixed axis. Translational and rotational motion
+should finish at the same time, and in general one of these speeds may
+be slower than specified to ensure simultaneous arrival. The sequence
+number provided will be used in subsequent messages from the robot
+controller to associate replies and status with the move request.
+
+Format of a Cartesian move request::
+
+  int length: 4 bytes, constant value 13 x 4 = 52
+  int message_type: 4 bytes, constant value 31
+  int comm_type; 4 bytes, constant value 2, REQUEST
+  int reply_type: 4 bytes, ignored, any value, typically 0
+  int seq_number: 4 bytes, identifying this request
+  float x, y, z, qx, qy, qz, qw: 4 bytes each, for the requested
+  Cartesian position and quaternion rotation
+  float translational_speed: 4 bytes, the speed to be applied to the
+  translational part
+  float rotational_speed: 4 bytes, the speed to be applied to the
+  rotational part
 
 Cartesian Move Reply
 --------------------
+The robot controller should reply to each Cartesian move request with
+a reply that the request can be initiated. Immediately upon receipt of
+the move request, the robot controller should reply with this message
+with the reply_type set to 3 (EXECUTING), or 2 (FAILURE) if
+the move request is not possible. When the motion has finished, the
+robot controller should reply with the reply_type set to 1 (SUCCESS),
+or 3 (FAILURE) if the move did not finish where requested.
 
-Cartesian Move Status
+Format of a Cartesian move reply::
+
+  int length: 4 bytes, constant value 4 x 4 = 16
+  int message_type: 4 bytes, constant value 31
+  int comm_type; 4 bytes, constant value 3, REPLY
+  int reply_type: 4 bytes, 1 = SUCCESS, 2 = FAILURE, 3 = EXECUTING
+  int seq_number: 4 bytes, identifying this request
+
+Cartesian Move State
 ---------------------
+The robot controller should continually send back Cartesian move state
+messages as the move progresses, with the current pose and speeds of
+the robot. The format is the same as for the request message, except
+that the comm_type is 1, TOPIC. 
+
+Format of a Cartesian move state message::
+
+  int length: 4 bytes, constant value 13 x 4 = 52
+  int message_type: 4 bytes, constant value 31
+  int comm_type; 4 bytes, constant value 1, TOPIC
+  int reply_type: 4 bytes, ignored, any value, typically 0
+  int seq_number: 4 bytes, identifying this request
+  float x, y, z, qx, qy, qz, qw: 4 bytes each, for the requested
+  Cartesian position and quaternion rotation
+  float translational_speed: 4 bytes, the speed to be applied to the
+  translational part
+  float rotational_speed: 4 bytes, the speed to be applied to the
+  rotational part
 
 References
 ==========
