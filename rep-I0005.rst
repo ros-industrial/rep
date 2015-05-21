@@ -18,6 +18,7 @@ Outline
 #. `Cartesian Move Request`_
 #. `Cartesian Move Reply`_
 #. `Cartesian Move State`_
+#. `Object State`_
 #. References_
 #. `Revision History`_
 #. Copyright_
@@ -116,6 +117,31 @@ Format of a Cartesian move state message::
   translational part
   float rotational_speed: 4 bytes, the speed to be applied to the
   rotational part
+
+Object State
+============
+A robot may have objects under its control, such as grippers or
+fixtures or other devices tied to its controller via auxiliary
+input/output lines. For these devices, state about the object can be
+reported with the object state message.
+
+For each object, the format of its information is::
+
+  int id: 4 bytes, a unique identifier known to the application
+  float x, y, z, qx, qy, qz, qw: 4 bytes each, for the Cartesian
+  position and orientation of the object
+
+A single object state message will include header information plus one
+or more object information sections::
+ 
+  int length: 4 bytes, variable value should be size of the message
+  excluding the 4 length bytes
+  int message_type: 4 bytes, constant value 40
+  int comm_type: 4 bytes, constant value 1, TOPIC
+  int reply_type: 4 bytes, N/A
+  int seq_number: 4 bytes
+  int number: 4 bytes, the number of objects that follow
+  object_information: multiples of 32 bytes for each object
 
 References
 ==========
