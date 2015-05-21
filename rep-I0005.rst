@@ -14,7 +14,7 @@ Outline
 
 #. Abstract_
 #. Motivation_
-#. `Message Specfications`_
+#. `Message Specifications`_
 #. `Cartesian Move Request`_
 #. `Cartesian Move Reply`_
 #. `Cartesian Move State`_
@@ -50,7 +50,7 @@ that may be tracked using built-in capabilities of the robot
 controller. 
 
 Message Specifications
-============================
+======================
 
 Cartesian Move Request
 ----------------------
