@@ -2,12 +2,10 @@
 
    REP: I0005
    Title: Cartesian Motion Extensions for the Simple Message Protocol
-   Authord: Fred Proctor <proctor@nist.gov> and Tre Harrison <william.harrison@nist.gov>
+   Authors: Fred Proctor <proctor@nist.gov> and Tre Harrison <william.harrison@nist.gov>
    Status: Active
    Type: Process
    Content-Type: text/x-rst
-   Created: 20-May-2015
-   Post-History: 20-May-2015
 
 Outline
 =======
@@ -56,9 +54,29 @@ Assumptions
 #. Integer numbers are 32-bit 2's complement,
    little-endian. Floating-point numbers are 32-bit little-endian
    following the IEEE 754 standard. See [#simple_message_tutorial]_.
+#. Units are SI units (meters, radians, seconds).
 #. Message identifiers are unique for each message type.
-#. Sequence numbers associate replies with requests.
-
+#. Sequence numbers associate replies with requests. Replies are send
+   upon receipt of commands, and when they complete, either
+   successfully or with an error. The type of error is not reported.
+#. State feeback messages are sent continuously at a period determined
+   by the robot controller. If a Cartesian move request is executing,
+   or was the most recent request to complete, Cartesian state
+   feedback will be sent. Joint state feedback messages may also be
+   sent, depending on the controller.
+#. Poses are with respect to the robot's world frame. Motions that are
+   specified relative to other frames, like the tool frame, should be
+   done in the application, and converted into the world frame. 
+#. Cartesian move requests will not alter the configuration flags that
+   resolve ambiguities between Cartesian space and joint space.
+   If a change in the robot configuration is desired, that
+   change should be made with joint move request. [Note: the
+   situation is reversed for parallel kinematic mechanisms.]
+#. Multiple Cartesian motion groups are not yet supported. 
+#. Tolerances on the path and final pose are not yet
+   supported. Applications can inspect the Cartesian state feedback
+   upon the reported completion of the move to determine if the motion
+   completed within the application's tolerance.
 
 Message Specifications
 ======================
@@ -66,28 +84,33 @@ Message Specifications
 Cartesian Move Request
 ----------------------
 A Cartesian move message requests that the robot move to the specified
-Cartesian position and Euler ZYX orientation along a straight line
-and about a fixed rotational axis. The translational speed applies to
-the motion along the straight line. The rotational speed applies to
-the motion about the fixed axis. Translational and rotational motion
-should finish at the same time, and in general one of these speeds may
-be slower than specified to ensure simultaneous arrival. The sequence
-number provided will be used in subsequent messages from the robot
-controller to associate replies and status with the move request.
+Cartesian position and Euler ZYX orientation along a straight line and
+about a fixed rotational axis. The sequence number provided will be
+used in subsequent messages from the robot controller to associate
+replies and status with the move request. The translational speed
+applies to the motion along the straight line. The rotational speed
+applies to the motion about the fixed axis. Translational and
+rotational motion should finish at the same time, and in general one
+of these speeds may be slower than specified to ensure simultaneous
+arrival. The duration is the time for the move. If positive, the
+duration is used instead of the speeds. At least one of the
+translational speed, rotational speed, or duration values must be
+positive.
 
 Format of a Cartesian move request::
 
-  int length: 4 bytes, constant value 12 x 4 = 48
+  int length: 4 bytes, constant value 13 x 4 = 52
   int message_type: 4 bytes, constant value 31
   int comm_type; 4 bytes, constant value 2, REQUEST
   int reply_type: 4 bytes, ignored, any value, typically 0
-  int seq_number: 4 bytes, identifying this request
+  int sequence: 4 bytes, identifying this request
   float x, y, z, ez, ey, ex: 4 bytes each, for the requested
   Cartesian position and Euler ZYX rotation
   float translational_speed: 4 bytes, the speed to be applied to the
   translational part
   float rotational_speed: 4 bytes, the speed to be applied to the
   rotational part
+  float duration: 4 bytes, the time in seconds for the move
 
 Cartesian Move Reply
 --------------------
@@ -102,31 +125,31 @@ or 3 (FAILURE) if the move did not finish where requested.
 Format of a Cartesian move reply::
 
   int length: 4 bytes, constant value 4 x 4 = 16
-  int message_type: 4 bytes, constant value 31
+  int message_type: 4 bytes, constant value 32
   int comm_type; 4 bytes, constant value 3, REPLY
   int reply_type: 4 bytes, 1 = SUCCESS, 2 = FAILURE, 3 = EXECUTING
-  int seq_number: 4 bytes, identifying this request
+  int sequence: 4 bytes, identifying this request
 
 Cartesian Move State
 ---------------------
 The robot controller should continually send back Cartesian move state
-messages as the move progresses, with the current pose and speeds of
-the robot. The format is the same as for the request message, except
-that the comm_type is 1, TOPIC. 
+messages as the move progresses, with the current pose and either
+speeds or time into the move as set by the request.
 
 Format of a Cartesian move state message::
 
   int length: 4 bytes, constant value 13 x 4 = 52
-  int message_type: 4 bytes, constant value 31
+  int message_type: 4 bytes, constant value 33
   int comm_type; 4 bytes, constant value 1, TOPIC
   int reply_type: 4 bytes, ignored, any value, typically 0
-  int seq_number: 4 bytes, identifying this request
-  float x, y, z, qx, qy, qz, qw: 4 bytes each, for the requested
-  Cartesian position and quaternion rotation
-  float translational_speed: 4 bytes, the speed to be applied to the
+  int seq_number: 4 bytes, identifying the most recent request
+  float x, y, z, ex, ey, ez: 4 bytes each, for the requested
+  Cartesian position and Euler ZYX orientation
+  float translational_speed: 4 bytes, the current speed of the
   translational part
-  float rotational_speed: 4 bytes, the speed to be applied to the
-  rotational part
+  float rotational_speed: 4 bytes, the current speed of the
+  orientation part
+  float duration: 4 bytes, time into the move
 
 References
 ==========
@@ -140,8 +163,8 @@ Revision History
 ================
 
 ::
-
-  2015-05-20  Initial revision
+2015-07-13  Updates after first round of comments   
+2015-05-20  Initial revision
 
 
 Copyright
