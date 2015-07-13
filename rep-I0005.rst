@@ -18,7 +18,6 @@ Outline
 #. `Cartesian Move Request`_
 #. `Cartesian Move Reply`_
 #. `Cartesian Move State`_
-#. `Object State`_
 #. References_
 #. `Revision History`_
 #. Copyright_
@@ -27,8 +26,7 @@ Abstract
 ========
 
 This REP documents extensions to the Simple Message protocol
-that support Cartesian motion, and the reporting of information about
-objects in the robot's workspace.
+that support Cartesian motion.
 
 Motivation
 ==========
@@ -45,10 +43,22 @@ controllers typically provide this function internally, and the
 proposed extensions enable external systems to benefit from the
 vendor's built-in kinematics. 
 
-The extensions also include messages for reporting the location and
-other information about objects in the robot's immediate environment
-that may be tracked using built-in capabilities of the robot
-controller. 
+Recognizing that robot controllers have limited computing power, data
+representations have been chosen to reduce the burden of converting
+between non-native representations, and reducing the need to to
+convert between different data sizes.
+
+Assumptions
+===========
+
+#. Messages are fixed length, so that robot controllers do not need to
+   dynamically allocate storage for variable length messages.
+#. Integer numbers are 32-bit 2's complement,
+   little-endian. Floating-point numbers are 32-bit little-endian
+   following the IEEE 754 standard. See [#simple_message_tutorial]_.
+#. Message identifiers are unique for each message type.
+#. Sequence numbers associate replies with requests.
+
 
 Message Specifications
 ======================
@@ -56,7 +66,7 @@ Message Specifications
 Cartesian Move Request
 ----------------------
 A Cartesian move message requests that the robot move to the specified
-Cartesian position and quaternion orientation along a straight line
+Cartesian position and Euler ZYX orientation along a straight line
 and about a fixed rotational axis. The translational speed applies to
 the motion along the straight line. The rotational speed applies to
 the motion about the fixed axis. Translational and rotational motion
@@ -67,13 +77,13 @@ controller to associate replies and status with the move request.
 
 Format of a Cartesian move request::
 
-  int length: 4 bytes, constant value 13 x 4 = 52
+  int length: 4 bytes, constant value 12 x 4 = 48
   int message_type: 4 bytes, constant value 31
   int comm_type; 4 bytes, constant value 2, REQUEST
   int reply_type: 4 bytes, ignored, any value, typically 0
   int seq_number: 4 bytes, identifying this request
-  float x, y, z, qx, qy, qz, qw: 4 bytes each, for the requested
-  Cartesian position and quaternion rotation
+  float x, y, z, ez, ey, ex: 4 bytes each, for the requested
+  Cartesian position and Euler ZYX rotation
   float translational_speed: 4 bytes, the speed to be applied to the
   translational part
   float rotational_speed: 4 bytes, the speed to be applied to the
@@ -118,37 +128,13 @@ Format of a Cartesian move state message::
   float rotational_speed: 4 bytes, the speed to be applied to the
   rotational part
 
-Object State
-============
-A robot may have objects under its control, such as grippers or
-fixtures or other devices tied to its controller via auxiliary
-input/output lines. For these devices, state about the object can be
-reported with the object state message.
-
-For each object, the format of its information is::
-
-  int id: 4 bytes, a unique identifier known to the application
-  float x, y, z, qx, qy, qz, qw: 4 bytes each, for the Cartesian
-  position and orientation of the object
-
-A single object state message will include header information plus one
-or more object information sections::
- 
-  int length: 4 bytes, variable value should be size of the message
-  excluding the 4 length bytes
-  int message_type: 4 bytes, constant value 40
-  int comm_type: 4 bytes, constant value 1, TOPIC
-  int reply_type: 4 bytes, N/A
-  int seq_number: 4 bytes
-  int number: 4 bytes, the number of objects that follow
-  object_information: multiples of 32 bytes for each object
-
 References
 ==========
 
 .. [#simple_message] ROS-Industrial simple_message package, ROS Wiki, on-line, retrieved 1 June 2014
    (http://wiki.ros.org/simple_message)
 
+.. [#simple_message_tutorial] Simple Message Tutorial, ROS Wiki. (http://wiki.ros.org/Industrial/Tutorials/create_joint_position_streaming_interface_using_tcp_socket_libraries)
 
 Revision History
 ================
