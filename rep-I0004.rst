@@ -7,7 +7,7 @@
   Type: Process
   Content-Type: text/x-rst
   Created: 01-Jun-2014
-  Post-History: 15-Aug-2014, 08-Oct-2014, 19-Nov-2014, 06-Jan-2015
+  Post-History: 15-Aug-2014, 08-Oct-2014, 19-Nov-2014, 06-Jan-2015, 05-Jan-2016
 
 
 Outline
@@ -295,7 +295,7 @@ References
 .. [#msg_joint_traj] JOINT_TRAJ, message definition, industrial_core Github repository, on-line
    (https://github.com/ros-industrial/industrial_core/blob/12a74a1f9f26aea0ee075edaf4c84473bd8e112a/simple_message/include/simple_message/joint_traj.h#L54-L62)
 .. [#msg_status] STATUS, message definition, industrial_core Github repository, on-line
-   (https://github.com/ros-industrial/industrial_core/blob/12a74a1f9f26aea0ee075edaf4c84473bd8e112a/simple_message/include/simple_message/robot_status.h#L95-L114)
+   (https://github.com/ros-industrial/industrial_core/blob/4405b0dc31212a50234eeaedd5d8e3a299f18755/simple_message/include/simple_message/robot_status.h#L95-L114)
 .. [#msg_joint_traj_pt_full] JOINT_TRAJ_PT_FULL, message definition, industrial_core Github repository, on-line
    (https://github.com/ros-industrial/industrial_core/blob/12a74a1f9f26aea0ee075edaf4c84473bd8e112a/simple_message/include/simple_message/joint_traj_pt_full.h#L70-L94)
 .. [#msg_joint_feedback] JOINT_FEEDBACK, message definition, industrial_core Github repository, on-line
@@ -307,11 +307,12 @@ Revision History
 
 ::
 
+  2016-01-05  Updated link to STATUS message header.
   2015-01-14  Added Vendor Specific Ranges for all currently supported
               robot platforms.
   2015-01-06  Added message identifier for GET_VERSION.
               Added Motoman specific message identifiers for SINGLE_IO
-              control which were implemented in v1.2.4 of the MotoROS 
+              control which were implemented in v1.2.4 of the MotoROS
               driver.
   2014-11-19  Reduced length of assigned vendor specific ranges from
               1000 to 100 identifiers
