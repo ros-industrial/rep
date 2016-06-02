@@ -151,11 +151,7 @@ and reserved ranges are indicated::
 
              22-999  -                            Reserved for future use
 
-          1000-1699  -                            Vendor specific
-
-          1700-1999  -                            Reserved for future use
-
-          2000-2099  -                            Vendor specific
+          1000-2999  -                            Vendor specific
 
          3000-65000  -                            Reserved for future use
 
@@ -199,7 +195,9 @@ table lists assigned vendor specific ranges::
           1400-1499  Fanuc                        -
           1500-1599  Epson                        -
           1600-1699  Stäubli                      -
+          1700-1999                               Reserved for future use
           2000-2099  Motoman                      -
+          2100-2999                               Reserved for future use
 
 
 See the next sections for a listing of all assigned message
@@ -329,7 +327,8 @@ Revision History
 
 ::
 
-  2016-06-XX  Add vendor specific ranges for Epson and Stäubli.
+  2016-07-02  Consolidate Vendor Specific ranges.
+  2016-06-31  Add vendor specific ranges for Epson and Stäubli.
   2016-01-05  Updated link to STATUS message header.
   2015-01-14  Added Vendor Specific Ranges for all currently supported
               robot platforms.
