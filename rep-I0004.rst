@@ -153,9 +153,9 @@ and reserved ranges are indicated::
 
           1000-2999  -                            Vendor specific
 
-         3000-65000  -                            Reserved for future use
+         3000-64999  -                            Reserved for future use
 
-        65001-65535  -                            Freely assignable
+        65000-65535  -                            Freely assignable
 
    65536-2147483647  -                            Reserved for future use
 
@@ -328,6 +328,8 @@ Revision History
 ::
 
   2016-07-02  Consolidate Vendor Specific ranges.
+              Shift start of Freely assignable range by 1 to make it
+              consistent with other range boundaries.
   2016-06-31  Add vendor specific ranges for Epson and Stäubli.
   2016-01-05  Updated link to STATUS message header.
   2015-01-14  Added Vendor Specific Ranges for all currently supported
