@@ -7,7 +7,7 @@
   Type: Process
   Content-Type: text/x-rst
   Created: 01-Jun-2014
-  Post-History: 15-Aug-2014, 08-Oct-2014, 19-Nov-2014, 06-Jan-2015, 05-Jan-2016
+  Post-History: 15-Aug-2014, 08-Oct-2014, 19-Nov-2014, 06-Jan-2015, 05-Jan-2016, 07-Jun-2016
 
 
 Outline
@@ -151,15 +151,11 @@ and reserved ranges are indicated::
 
              22-999  -                            Reserved for future use
 
-          1000-1499  -                            Vendor specific
+          1000-2999  -                            Vendor specific
 
-          1500-1999  -                            Reserved for future use
+         3000-64999  -                            Reserved for future use
 
-          2000-2099  -                            Vendor specific
-
-         3000-65000  -                            Reserved for future use
-
-        65001-65535  -                            Freely assignable
+        65000-65535  -                            Freely assignable
 
    65536-2147483647  -                            Reserved for future use
 
@@ -197,7 +193,11 @@ table lists assigned vendor specific ranges::
           1200-1299  Adept                        -
           1300-1399  ABB                          -
           1400-1499  Fanuc                        -
+          1500-1599  Epson                        -
+          1600-1699  Stäubli                      -
+          1700-1999                               Reserved for future use
           2000-2099  Motoman                      -
+          2100-2999                               Reserved for future use
 
 
 See the next sections for a listing of all assigned message
@@ -257,6 +257,26 @@ Fanuc
  1400-1499  -                                     Reserved for future use
 
 
+Epson
+^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1500-1599  -                                     Reserved for future use
+
+
+Stäubli
+^^^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1600-1699  -                                     Reserved for future use
+
+
 Motoman
 ^^^^^^^
 
@@ -307,6 +327,10 @@ Revision History
 
 ::
 
+  2016-07-07  Consolidate Vendor Specific ranges.
+              Shift start of Freely assignable range by 1 to make it
+              consistent with other range boundaries.
+  2016-07-07  Add vendor specific ranges for Epson and Stäubli.
   2016-01-05  Updated link to STATUS message header.
   2015-01-14  Added Vendor Specific Ranges for all currently supported
               robot platforms.
