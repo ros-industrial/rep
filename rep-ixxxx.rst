@@ -1,0 +1,226 @@
+::
+
+  REP: Ixxxx
+  Title: Naming conventions for ABB robots in ROS-Industrial
+  Author: G.A. vd. Hoorn <g.a.vanderhoorn@tudelft.nl>
+  Status: Draft
+  Type: Process
+  Content-Type: text/x-rst
+  Created: 25-Jan-2017
+  Post-History: 
+
+
+Outline
+=======
+
+#. Abstract_
+#. Motivation_
+#. Definitions_
+#. Assumptions_
+#. `Conversion of product names`_
+#. `ABB ROS name template`_
+#. `Names in namespaced contexts`_
+#. Examples_
+
+   #. `ABB IRB 1600ID-4/1.55`_
+   #. `ABB IRB 14000-0.5/0.5 (YuMi)`_
+   #. `ABB IRBT 4004`_
+
+#. References_
+#. `Revision History`_
+#. Copyright_
+
+
+Abstract
+========
+
+Resource and artefact naming in ROS-Industrial is based upon the rules defined by the greater ROS community. On-top of this, to ensure consistency and uniformity, the ROS-Industrial community has defined additional naming conventions for use in specific contexts such as robot support and MoveIt configuration packages.
+
+This REP extends those conventions with rules specific to ABB robots and related hardware and documents how to transform product names into legal ROS resource names. Additionally, it provides some guidelines on how such names should be used within ROS and ROS-Industrial packages.
+
+
+Motivation
+==========
+
+Names given by ABB Robotics to their products cannot be directly used as names in ROS or ROS-Industrial contexts.
+Among other things, whitespace is not allowed, punctuation characters are illegal and certain special characters (such as the forward slash) are reserved and have a special function in ROS [#ros_names]_.
+There is thus a clear need to convert ABB product names into legal ROS resource names and this REP provides the rules used in ROS-Industrial to do that.
+
+The following are the requirements and constraints that guided the design of the conversion rules:
+
+#. must be legal names in accordance with ROS resource naming guidelines [#ros_names]_
+#. converted names must resemble the original names as much as possible
+#. must be as recognisable as possible for users with experience with ABB products
+#. names must be unambiguous and should uniquely identify a particular robot series, variant or other piece of related hardware
+#. must not result in overly verbose (ie: long) names
+
+
+Definitions
+===========
+
+Robot Series
+    A grouping of (industrial) robots produced by a single manufacturer according to a set of shared characteristics, such as minimum and maximum payload, arm reach or intended use.
+    Example: the *ABB IRB 1600* series of industrial robots.
+Robot Variant
+    One specific member of a robot series, with specific choices for the characteristics that make this robot a member of the series.
+    Example: the *ABB IRB 1600ID-4/1.55* variant.
+
+
+Assumptions
+===========
+
+#. The key words *must*, *must not*, *required*, *shall*, *shall not*, *should*, *should not*, *recommended*,  *may*, and *optional* in this document are to be interpreted as described in RFC-2119 [#RFC2119]_.
+#. In addition to what is described in this REP, naming of topics, services, actions, parameters, files, directories and other artefacts shall comply with base ROS naming guidelines as described in [#ros_names]_.
+
+
+Conversion of product names
+===========================
+
+Names of ABB Robotics' products cannot be used to name ROS resources, as they violate the ROS naming rules [#ros_names]_. Such names must first be converted into valid resource names by use of the following steps:
+
+#. convert all characters to lowercase
+#. replace all whitespace with underscores ('``_``'), making sure to never introduce two consecutive underscores
+#. remove the underscore between ``irb`` and the series number
+
+If the product name includes a maximum handling capacity and reach (ie: names a *variant*):
+
+4. replace the dash ('``-``') separating the payload from the series number with an underscore
+#. replace the forward slash ('``/``') separating the reach from the payload with an underscore
+#. convert the reach to centimetres
+
+If the payload is below one (``1``) kilogram:
+
+7. multiply the payload by ten (``10``)
+#. truncate the result
+#. prefix the result with a zero (``0``)
+
+The resulting string should now be a valid ROS resource name, containing no whitespace, no punctuation characters other than underscores and lowercase only.
+
+
+ABB ROS name template
+=====================
+
+The following are the constituent parts of an ABB Robotics' product name after conversion to a ROS compatible name::
+
+  abb_irbSERIES[MODIFIER]_PAYLOAD_REACH
+
+Here:
+
+- ``SERIES`` is a numeric string representing the product series number
+- ``MODIFIER`` is an optional alphanumeric string containing a code that identifies which particular variant of the series this is
+- ``PAYLOAD`` is a numeric string that encodes the *maximum handling capacity* in kilograms (see `Conversion of product names`_ for dealing with payloads smaller than one kilogram)
+- ``REACH`` is a numeric string representing the reach of the robot in centimetres
+
+Note that not all parts are required in a name as a particular robot series may not have designated variants.
+For such models, ``MODIFIER`` for instance should be omitted.
+
+
+Names in namespaced contexts
+============================
+
+In contexts where the name of the manufacturer is already part of the fully qualified path to an artefact, such a prefix may not be added again to the name of said artefact.
+
+Examples of this would be ``rospack`` commands (such as xacro ``find``) and ``package://`` URIs to artefacts within ROS-Industrial robot support packages: in accordance with [#rep144]_, such packages already include the name of the manufacturer as a prefix, making the same prefix on files in such packages superfluous.
+
+Automatically generated artefacts (such as those in MoveIt! packages) are exempt from this rule.
+
+
+Examples
+========
+
+This section provides three examples of package and artefact naming according to the conventions described in the previous sections.
+
+ABB IRB 1600ID-4/1.55
+---------------------
+
+This is the ``ID`` (*Integrated Dressing*) variant of the ``IRB 1600`` series, with a maximum supported handling capacity of ``4`` kg and a reach of ``1.55`` metres [#irb1600iddocs]_.
+
+Conversion of product name::
+
+  Original  Converted
+  -------------------
+       ABB        abb
+       IRB        irb
+      1600       1600
+        ID         id
+         4          4
+      1.55        155
+
+Note the conversion of the reach from ``1.55`` metres into ``155`` centimetres.
+
+Name in non-namespaced contexts: ``abb_irb1600id_4_155``.
+
+Name in namespaced contexts: ``irb1600id_4_155``.
+
+
+ABB IRB 14000-0.5/0.5 (YuMi)
+----------------------------
+
+A model in the ``IRB 14000`` series, with a handling capacity of ``0.5`` kg and a maximum reach of ``0.5`` metres [#irb14000docs]_.
+
+Conversion of product name::
+
+  Original  Converted
+  -------------------
+       ABB        abb
+       IRB        irb
+     14000      14000
+       0.5         05
+       0.5         50
+
+Note the ``0``-prefix on the payload element to encode the below-one-kilogram handling capacity.
+
+Name in non-namespaced contexts: ``abb_irb14000_05_50``.
+
+Name in namespaced contexts: ``irb14000_05_50``.
+
+
+ABB IRBT 4004
+-------------
+
+This is the ``4004`` variant of the ``X004`` series of linear tracks [#irbt4004docs]_.
+
+Conversion of product name::
+
+  Original  Converted
+  -------------------
+       ABB        abb
+      IRBT       irbt
+      4004       4004
+
+Name in non-namespaced contexts: ``abb_irbt4004``.
+
+Name in namespaced contexts: ``irbt4004``.
+
+
+References
+==========
+
+.. [#RFC2119] Key words for use in RFCs to Indicate Requirement Levels, on-line, retrieved 24 January 2017
+   (https://tools.ietf.org/html/rfc2119)
+.. [#naming_issue] Define ABB specific naming rules/guidelines, ros-industrial/abb issue tracker, on-line, retrieved 24 January 2017
+   (https://github.com/ros-industrial/abb/issues/75)
+.. [#ros_names] Names, ROS Wiki, on-line, retrieved 24 January 2017
+   (http://wiki.ros.org/Names)
+.. [#rep144] REP-144: ROS Package Naming, 28 January 2015, ROS Enhancement Proposal, on-line, retrieved 24 January 2017
+   (http://www.ros.org/reps/rep-0144.html)
+.. [#irb1600iddocs] IRB 1660ID, ROB0337EN A, Sept 2016, ABB Robotics, on-line, retrieved 24 January 2017
+   (https://library.e.abb.com/public/2adfb38d7fbd4dccab7f9b1c153887bb/ROB0337EN_A_IRB_1660ID.pdf)
+.. [#irb14000docs] IRB 14000, ROB0317EN, April 2015, ABB Robotics, on-line, retrieved 24 January 2017
+   (https://library.e.abb.com/public/55362813a776464383279a729b715c89/ROB0317EN_YuMi.pdf)
+.. [#irbt4004docs] IRBT 4004/6004/7004, PR10335EN R3, Aug 2016, ABB Robotics, on-line, retrieved 24 January 2017
+   (https://library.e.abb.com/public/890958c5e98649a28a1ceba0f377938d/PR10335EN_R3_IRBT_X004_trackmotion.pdf)
+
+
+Revision History
+================
+
+::
+
+  2017-01-24  Initial revision
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
