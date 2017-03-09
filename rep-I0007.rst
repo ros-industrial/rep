@@ -1,6 +1,6 @@
 ::
 
-  REP: Ixxxx
+  REP: I0007
   Title: Naming conventions for ABB robots in ROS-Industrial
   Author: G.A. vd. Hoorn <g.a.vanderhoorn@tudelft.nl>
   Status: Draft
