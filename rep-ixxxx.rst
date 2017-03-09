@@ -26,6 +26,7 @@ Outline
    #. `ABB IRB 14000-0.5/0.5 (YuMi)`_
    #. `ABB IRBT 4004`_
 
+#. Alternatives_
 #. References_
 #. `Revision History`_
 #. Copyright_
@@ -191,6 +192,36 @@ Conversion of product name::
 Name in non-namespaced contexts: ``abb_irbt4004``.
 
 Name in namespaced contexts: ``irbt4004``.
+
+
+Alternatives
+============
+
+This section reasons about alternative conversion rules and why they were rejected.
+
+
+Ingnoring payload
+-----------------
+
+For many robot series, the largest differences for variants are in *reach* and *handling capacity* (or *payload*), with variations having higher payloads but identical reaches, joint position and joint velocity limits.
+Naming in ROS and ROS-Industrial is typically done in such a way that prefixes and suffixes are used to make them more specific [#rep144]_, making it possible to group related entities by exploiting late *branching* in names (ie: removing suffixes).
+With ``PAYLOAD`` before ``REACH``, naming of robots which differ only in maximum supported payload can't make use of this (to avoid duplication of files in support packages fi) as ``REACH`` is neither a suffix nor a prefix.
+``REACH`` could be placed before ``PAYLOAD``, but this does not address the issue, as now variants which differ in reach but not in maximum payload would still receive non-overlapping names.
+
+One alternative approach considered was to ignore payload altogether and only include the maximum reach in converted names.
+This would resolve the issue described above (as only reach-variants of robots would have to be separately modelled) and would not have any real impact on the (re-)usability of support packages, as payloads (and to a large extent: dynamics) are not currently taken into account by any of the drivers or default motion planners in use in ROS and ROS-Industrial.
+
+While this approach would perhaps make naming slightly easier it was rejected because of three main reasons: it reduces future reusability of support packages, introduces ambiguity for users (not) already familiar with ABB Robotics product naming and reuse of models for particular payload-variants can be equally well addressed with documentation.
+
+Future reuseability is reduced because improved drivers and planners are likely to start taking payload information into account.
+Not modelling payloads would require that information to be added retrospectively to all supported packages.
+
+Further, ignoring payload could actually increase ambiguity, both to users familiar with ABB product names and those that are not.
+For the former it would be a deviation from ABB's regular naming (which always includes both payload and reach), while the latter would need to depend on documentation to figure out that what is included in the name is the reach, and not the payload.
+
+Finally, a simpler approach would be to include both payload and reach, and then to document the fact that payload-variant model *X1* should be used in all cases where payload-variant model *X2* is actually needed.
+The same approach can be used for reach-variant models with identical payloads.
+This avoids all potential ambiguity, stays as close as possible to ABB Robotic's product naming and also allows to completely avoid duplicating any models or related support infrastructure.
 
 
 References
