@@ -286,12 +286,16 @@ Motoman
 
       2001  MOTOMAN_MOTION_CTRL                   -
       2002  MOTOMAN_MOTION_REPLY                  -
-      2003  MOTOMAN_READ_SINGLE_IO                -
-      2004  MOTOMAN_READ_SINGLE_IO_REPLY          -
-      2005  MOTOMAN_WRITE_SINGLE_IO               -
-      2006  MOTOMAN_WRITE_SINGLE_IO_REPLY         -
+      2003  ROS_MSG_MOTO_READ_IO_BIT              -
+      2004  ROS_MSG_MOTO_READ_IO_BIT_REPLY        -
+      2005  ROS_MSG_MOTO_WRITE_IO_BIT             -
+      2006  ROS_MSG_MOTO_WRITE_IO_BIT_REPLY       -
+      2007  ROS_MSG_MOTO_READ_IO_GROUP            -
+      2008  ROS_MSG_MOTO_READ_IO_GROUP_REPL       -
+      2009  ROS_MSG_MOTO_WRITE_IO_GROUP           -
+      2010  ROS_MSG_MOTO_WRITE_IO_GROUP_REPL      -
 
- 2007-2015  -                                     Reserved for future use
+ 2011-2015  -                                     Reserved for future use
 
       2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    -
       2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        -
@@ -327,6 +331,7 @@ Revision History
 
 ::
 
+  2017-03-28  Update Motoman specific I/O messages.
   2016-07-07  Consolidate Vendor Specific ranges.
               Shift start of Freely assignable range by 1 to make it
               consistent with other range boundaries.
