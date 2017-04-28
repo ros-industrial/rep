@@ -200,7 +200,7 @@ Alternatives
 This section reasons about alternative conversion rules and why they were rejected.
 
 
-Ingnoring payload
+Ignoring payload
 -----------------
 
 For many robot series, the largest differences for variants are in *reach* and *handling capacity* (or *payload*), with variations having higher payloads but identical reaches, joint position and joint velocity limits.
