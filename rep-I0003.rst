@@ -1,5 +1,4 @@
 ::
-    
     REP: I0003
     Title: Cartesian Path Planner Interface Pipeline
     Author: Shaun Edwards, Dan Solomon, Jorge Nicho, Chris Lewis, Paul Hvass, Jeremy Zoss, Clay Flannigan
@@ -34,27 +33,30 @@ The current MoveIt/ROS interfaces are focused on pick and place applications.  I
 
 
 Definitions
-=========
+===========
+
 The following definitions are used throughout:
  * semi-constrained path - a path in which at least part of the path has some allowance for variation.
 
 Requirements
-=========
+============
+
  * At a high level, the pipeline shall take a semi-constrained Cartesian path as input and output a joint trajectory for manipulator execution.
  * The pipeline shall have a ROS and C++ API.  The ROS API should support the most common use cases, but can be more limited than the full C++ API
  * The pipeline structure should be implemented in an abstract manor, such that steps within the pipeline can be overridden with custom functionality.  NOTE: This can be accomplished using traditional object oriented techniques.  Use of plugins is not a requirement (at this time).
 
 Design Assumptions
-========= 
+==================
 
 Specification
-=========
+=============
 
 ROS API
-=========
+=======
+
 The ROS API defines the topics, services, actions, and parameters by which external ROS nodes can interact with the pipeline.
 
-The definition of a process path plan is a key concept in the ROS API (as well as other APIs).  A process path plan defines the waypoints and segments for a path.  Each waypoint shall be defined by a set of constraints.  
+The definition of a process path plan is a key concept in the ROS API (as well as other APIs).  A process path plan defines the waypoints and segments for a path.  Each waypoint shall be defined by a set of constraints.
 **Process Path Definition**
 ::
 
@@ -71,17 +73,16 @@ The definition of a process path plan is a key concept in the ROS API (as well a
             type (linear, joint, circular)
             acceleration
             velocity
-   
 
 Rationale
-==========
+=========
 
 Todo's
-=========
- 
+======
+
 Reference Implementation
-==========
- 
+========================
+
 References
 ==========
 
@@ -90,7 +91,7 @@ Copyright
 
 This document has been placed in the public domain.
 
- 
+
 ..
    Local Variables:
    mode: indented-text
