@@ -10,4 +10,6 @@ install:
   - pip install doc8==0.8.0
 
 script:
-  - "doc8 --file-encoding=utf8 *.rst"
+  # we ignore D001 (Line too long) as REPs rely on (soft) wrapping in
+  # editors / viewers.
+  - "doc8 --file-encoding=utf8 --ignore D001 *.rst"
