@@ -7,7 +7,7 @@
   Type: Process
   Content-Type: text/x-rst
   Created: 16-Jan-2018
-  Post-History: 
+  Post-History:
 
 
 TODO
@@ -79,7 +79,7 @@ Motivation
 ==========
 
 Like other network protocols, the ROS-Industrial Simple Message protocol [#simple_message]_ defines a set of message structures to allow senders and receivers to exchange information in a structured and consistent way.
-In order to be able to provide generic implementations of the Simple Message protocol (de)serialisation libraries, to avoid potential incompatibility between clients and servers and to assist developers in implementing new drivers, a central registry of defined message identifiers, their structures and their semantics is essential. 
+In order to be able to provide generic implementations of the Simple Message protocol (de)serialisation libraries, to avoid potential incompatibility between clients and servers and to assist developers in implementing new drivers, a central registry of defined message identifiers, their structures and their semantics is essential.
 Identifiers are documented in *Assigned Message Identifiers for the Simple Message Protocol* [#REP-I0004]_.
 Message structures and their semantics are described in this document.
 
@@ -144,7 +144,7 @@ TODO: explain makeup of bytestream: length, header, payload. No magic or sync by
 Shared Types
 ------------
 
-All message structures are aggregates of fields with a type from the set of *shared types*. 
+All message structures are aggregates of fields with a type from the set of *shared types*.
 
 The following set has been defined (type sizes are in bytes)::
 
