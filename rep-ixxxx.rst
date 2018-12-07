@@ -20,7 +20,8 @@ TODO
 Abstract
 ========
 
-This REP documents the Simple Message message structures that are part of the *standard set* as defined in *Assigned Message Identifiers for the Simple Message Protocol* [#REP-I0004]_, and supported by the generic clients in the ``industrial_robot_client`` package. Both syntax and semantics of message structures and fields are described.
+This REP documents the Simple Message message structures that are part of the *standard set* as defined in *Assigned Message Identifiers for the Simple Message Protocol* [#REP-I0004]_, and supported by the generic clients in the ``industrial_robot_client`` package.
+Both syntax and semantics of message structures and fields are described.
 
 Driver authors may treat this document as the normative reference for message type structures in the standard set within the ROS-Industrial Simple Message protocol.
 
@@ -382,7 +383,7 @@ Notes
 #. The size of the ``joint_data`` array is ``10``, even if the server implementation does not need that many elements (for instance because it only has six joints).
 #. Controllers that support or are configured with more than a single motion group should use the `JOINT_FEEDBACK`_ message if they wish to report joint state for all configured motion groups (note: unfortunately there is currently no support for `JOINT_FEEDBACK`_ messages in the generic clients, that will have to be added).
 #. The elements of the ``joint_data`` field shall represent the joint space positions of the corresponding joint axes of the controller.
-   In accordance with [#REP103]_, units are *radians* for revolute or rotational axes, and *meters* for prismatic or translational axes.
+   In accordance with [#REP103]_, units are *radians* for revolute or rotational axes, and *metres* for prismatic or translational axes.
 
 
 JOINT_TRAJ_PT
@@ -420,7 +421,7 @@ Reply::
 Notes
 
 #. Drivers shall set the value of the ``reply_code`` field in the ``Header`` of the reply messages to *the result of the enqueueing operation* of the trajectory point that was transmitted in the request.
-   It shall *not* to be used to report the success or failure of the *execution* of the motion.
+   It shall *not* be used to report the success or failure of the *execution* of the motion.
    Drivers should use the appropriate fields in `STATUS`_ for that (note: the generic nodes in ``industrial_robot_client`` currently ignore the ``reply_code`` field of incoming `JOINT_TRAJ_PT`_ replies (see [#irc_issue118]_). Nevertheless, server implementations must send replies to incoming `JOINT_TRAJ_PT`_ requests. Failure to do so will prevent the exchange of further messages).
 #. Refer to `Special Sequence Numbers`_ for valid values for the ``sequence`` field.
 #. Driver authors must abort any motion executing on the controller on receipt of a message with ``sequence`` set to ``STOP_TRAJECTORY``.
@@ -430,7 +431,7 @@ Notes
 #. The number of elements in the ``joint_data`` array must always be equal to ten (``10``), even if the server implementation does not need that many elements (for instance because it only has six joints).
 #. Controllers that support or are configured with more than a single motion group should use the `JOINT_TRAJ_PT_FULL`_ message if they wish to relay trajectories for all configured motion groups.
 #. The elements of the ``joint_data`` field shall represent the joint space positions of the corresponding joint axes of the controller.
-   Units are *radians* for rotational or revolute axes, and *meters* for translational or prismatic axes (see also [#REP103]_).
+   Units are *radians* for rotational or revolute axes, and *metres* for translational or prismatic axes (see also [#REP103]_).
 #. The ``duration`` field represents total segment duration for all joints in seconds [#REP103]_.
    The generic nodes calculate this duration based on the time needed by the slowest joint to complete the segment.
    As an alternative to the ``duration`` field, the value of the ``velocity`` field is a value representing the fraction ``(0.0, 1.0]`` of maximum joint velocity that should be used when executing the motion for the current segment.
@@ -444,7 +445,8 @@ JOINT_TRAJ
 This message was used to encode entire ROS ``JointTrajectory`` messages into Simple Message messages.
 Primarily intended to be used by *downloading* drivers, it included a fixed length array with instances of `JOINT_TRAJ_PT`_.
 
-New download drivers should not use this message anymore, but instead should use either `JOINT_TRAJ_PT`_ or `JOINT_TRAJ_PT_FULL`_ and buffer on the server side. `Special Sequence Numbers`_ can be used to indicate trajectory start and end.
+New download drivers should not use this message anymore, but instead should use either `JOINT_TRAJ_PT`_ or `JOINT_TRAJ_PT_FULL`_ and buffer on the server side.
+`Special Sequence Numbers`_ can be used to indicate trajectory start and end.
 
 Message type: *synchronous service*
 
@@ -618,7 +620,8 @@ Notes
 #. Drivers shall set all elements of invalid fields (as encoded by ``valid_fields``) to zero (``0``).
 #. Elements of ``positions``, ``velocities`` and ``accelerations`` that are not used must be initialised to zero (``0``) by the sender.
 #. The number of elements in the ``positions``, ``velocities`` and ``accelerations`` arrays must always be equal to ten (``10``), even if the server implementation does not need that many elements (for instance because it only has six joints).
-#. This message does not currently support motion controllers that support more than ten (``10``) axes in a single motion group. A suggested work-around is to divide the total number of axes over a number of *virtual* motion groups and use additional processing logic on the client side to recombine multiple ``JOINT_FEEDBACK`` messages into a single representation of controller joint state.
+#. This message does not currently support motion controllers that support more than ten (``10``) axes in a single motion group.
+   A suggested work-around is to divide the total number of axes over a number of *virtual* motion groups and use additional processing logic on the client side to recombine multiple ``JOINT_FEEDBACK`` messages into a single representation of controller joint state.
 
 
 Defined Constants
