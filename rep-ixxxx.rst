@@ -128,6 +128,10 @@ Requirements and constraints that influenced its design were:
 #. The protocol is not intended to encapsulate version information.
    It is up to individual developers to ensure that code developed for communicating platforms does not have any version conflicts (this includes message type identifiers).
 
+Note: these were the design requirements and constraints at the time the protocol was first created (2012).
+Since then, numerous similar protocols have been created that would undoubtedly have been considered for adoption instead of creating a new protocol.
+As a retrospective REP, this document only describes the *existing situation*, so it will not include a discussion of design alternatives nor extensive rationale for why the protocol implementation is as it is today.
+
 
 Model of Operation
 ------------------
