@@ -142,7 +142,17 @@ TODO: client-server based. Controller-specific programs running on the controlle
 Bytestream Layout
 -----------------
 
-TODO: explain makeup of bytestream: length, header, payload. No magic or sync bytes (currently). No section markers, just byte counting.
+Bytestream layout is straightforward in Simple Message and there is little difference between traffic carried over TCP or UDP connections.
+Reassembly of fragmented messages, where necessary, must be performed by the client or server in cases where the underlying protocol does not support this (ie: for UDP connections).
+
+Message content is serialised from its in-memory representation for transmission and must be packed to both for efficiency reasons as well as to avoid issues due to differences in alignment between client and server platforms.
+Bytestreams shall consist of a length byte, followed by the bytes constituting the message header, followed by the bytes encoding the payload section of the message.
+
+There are no magic byte sequences defined, nor any other form of sync or section marker bytes.
+Byte-counting is used to correctly segment incoming bytestreams and for deserialising incoming data into the respective message structures.
+
+The base Simple Message specification also does not prescribe any form of versioning on bytestreams nor any method for detecting incompatible servers or clients.
+If such functionality is required, implementations are suggested to do this at the application level.
 
 
 Shared Types
