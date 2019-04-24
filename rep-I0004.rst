@@ -300,7 +300,11 @@ Motoman
       2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    -
       2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        -
 
- 2018-2099  -                                     Reserved for future use
+ 2018-2019  -                                     Reserved for future use
+
+      2020  ROS_MSG_MOTO_GET_DH_PARAMETERS        -
+
+ 2021-2099  -                                     Reserved for future use
 
 
 References
@@ -331,6 +335,7 @@ Revision History
 
 ::
 
+  2019-04-24  Add Motoman specific message to retrieve D-H parameters.
   2017-03-28  Update Motoman specific I/O messages.
   2016-07-07  Consolidate Vendor Specific ranges.
               Shift start of Freely assignable range by 1 to make it
