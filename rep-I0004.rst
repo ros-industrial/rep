@@ -284,23 +284,29 @@ Motoman
 
   ID        Name                                  Comment
 
-      2001  MOTOMAN_MOTION_CTRL                   -
+      2001  MOTOMAN_MOTION_CTRL                   Control motion-server settings/options
       2002  MOTOMAN_MOTION_REPLY                  -
-      2003  ROS_MSG_MOTO_READ_IO_BIT              -
+      2003  ROS_MSG_MOTO_READ_IO_BIT              Read single I/O point (any address)
       2004  ROS_MSG_MOTO_READ_IO_BIT_REPLY        -
-      2005  ROS_MSG_MOTO_WRITE_IO_BIT             -
+      2005  ROS_MSG_MOTO_WRITE_IO_BIT             Write single input point ('Network Inputs' only)
       2006  ROS_MSG_MOTO_WRITE_IO_BIT_REPLY       -
-      2007  ROS_MSG_MOTO_READ_IO_GROUP            -
-      2008  ROS_MSG_MOTO_READ_IO_GROUP_REPL       -
-      2009  ROS_MSG_MOTO_WRITE_IO_GROUP           -
-      2010  ROS_MSG_MOTO_WRITE_IO_GROUP_REPL      -
+      2007  ROS_MSG_MOTO_READ_IO_GROUP            Ready whole group (byte) of I/O (any address)
+      2008  ROS_MSG_MOTO_READ_IO_GROUP_REPLY      -
+      2009  ROS_MSG_MOTO_WRITE_IO_GROUP           Write whole group (byte) of 'Network Inputs'
+      2010  ROS_MSG_MOTO_WRITE_IO_GROUP_REPLY     -
+      2011  ROS_MSG_MOTO_IOCTRL_REPLY             -
 
- 2011-2015  -                                     Reserved for future use
+ 2012-2015  -                                     Reserved for future use
 
-      2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    -
-      2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        -
+      2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    Command multiple control-groups with a single message
+      2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        Get feedback position of multiple control-groups with a single message
+      2018  ROS_MSG_MOTO_SELECT_TOOL              Set the active tool mass properties (for PFL function)
 
- 2018-2099  -                                     Reserved for future use
+ 2019       -                                     Reserved for future use
+
+      2020  ROS_MSG_MOTO_GET_DH_PARAMETERS        Get DH parameters for all control-groups connected to the robot controller
+
+ 2021-2099  -                                     Reserved for future use
 
 
 References
