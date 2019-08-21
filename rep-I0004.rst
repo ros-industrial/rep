@@ -337,6 +337,8 @@ Revision History
 
 ::
 
+  2019-08-20  Add Motoman specific messages: get D-H parameters and
+              tool configuration selection.
   2017-03-28  Update Motoman specific I/O messages.
   2016-07-07  Consolidate Vendor Specific ranges.
               Shift start of Freely assignable range by 1 to make it
