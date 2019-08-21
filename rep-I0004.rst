@@ -300,7 +300,7 @@ Motoman
 
       2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    Command multiple control-groups with a single message
       2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        Get feedback position of multiple control-groups with a single message
-      2018  ROS_MSG_MOTO_SELECT_TOOL              Set the active tool mass properties (for PFL function)
+      2018  ROS_MSG_MOTO_SELECT_TOOL              Set the active tool file (for PFL function)
 
  2019       -                                     Reserved for future use
 
