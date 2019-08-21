@@ -302,7 +302,7 @@ Motoman
       2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        Get feedback position of multiple control-groups with a single message
       2018  ROS_MSG_MOTO_SELECT_TOOL              Set the active tool file (for PFL function)
 
- 2019       -                                     Reserved for future use
+      2019  -                                     Reserved for future use
 
       2020  ROS_MSG_MOTO_GET_DH_PARAMETERS        Get DH parameters for all control-groups connected to the robot controller
 
