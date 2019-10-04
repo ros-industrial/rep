@@ -737,7 +737,18 @@ This shows a stream for a ``JOINT_POSITION`` message, sent by a server to broadc
 
 Direction: server → client
 
-::
+Complete packet::
+
+  00000038 0000000A
+  00000001 00000000
+  00000000 B81AD9FA
+  B6836312 B7C043F5
+  B8B81516 B865D055
+  B8B6365E 00000000
+  00000000 00000000
+  00000000
+
+Field description::
 
   Hex       Field              Description
 
@@ -771,7 +782,19 @@ This is for a six-axis robot.
 
 Direction: client → server
 
-::
+Complete packet::
+
+  00000040 0000000B
+  00000002 00000000
+  00000001 A7600000
+  3EA7CDE8 BF5D9E57
+  C0490FDB 3F34815F
+  C0490FDB 00000000
+  00000000 00000000
+  00000000 3DCCCCCD
+  40A00000
+
+Field description::
 
   Hex       Field              Description
 
@@ -807,7 +830,16 @@ Note that the state of the e-stop could not be determined by the driver, and is 
 
 Direction: server → client
 
-::
+Complete packet::
+
+  00000028 0000000D
+  00000001 00000000
+  00000001 FFFFFFFF
+  00000000 00000000
+  00000000 00000002
+  00000001
+
+Field description::
 
   Hex       Field              Description
 
