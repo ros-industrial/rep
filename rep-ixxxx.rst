@@ -686,8 +686,8 @@ Tri-states
   Val  Name     Description
 
    -1  UNKNOWN  -
-    0  ON       Also encodes TRUE, ENABLED or HIGH
-    1  OFF      Also encodes FALSE, DISABLED or LOW
+    0  OFF      Also encodes FALSE, DISABLED or LOW
+    1  ON       Also encodes TRUE, ENABLED or HIGH
 
 All other values are reserved for future use.
 
