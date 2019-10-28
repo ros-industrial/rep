@@ -195,7 +195,8 @@ table lists assigned vendor specific ranges::
           1400-1499  Fanuc                        -
           1500-1599  Epson                        -
           1600-1699  Stäubli                      -
-          1700-1999                               Reserved for future use
+          1700-1799  Elfin                        -
+          1800-1999                               Reserved for future use
           2000-2099  Motoman                      -
           2100-2999                               Reserved for future use
 
@@ -277,6 +278,17 @@ Stäubli
  1600-1699  -                                     Reserved for future use
 
 
+Elfin
+^^^^^^^
+
+::
+
+  ID        Name                                  Comment
+
+ 1700-1799  -                                     Reserved for future use
+
+
+
 Motoman
 ^^^^^^^
 
@@ -336,7 +348,7 @@ Revision History
 ================
 
 ::
-
+  2019-10-28  Assigned range for Elfin robot 
   2019-08-20  Add Motoman specific messages: get D-H parameters and
               tool configuration selection.
   2017-03-28  Update Motoman specific I/O messages.
