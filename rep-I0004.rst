@@ -67,8 +67,8 @@ Application Procedure
 
 Requests for assignment (RFA) of a new message identifier,
 reassignment of an already assigned one or migration of a message type
-from a special range to the standard set should be addressed to the
-ROS-Industrial mailing list [#rosi_ml]_.
+from a special range to the standard set should be posted in the
+ROS-Industrial ROS Discourse category [#rosi_rdq]_.
 
 RFAs are expected to contain a short description of the message type,
 its name, intended use and its merit. For a reassignment or migration,
@@ -314,8 +314,8 @@ References
 
 .. [#simple_message] ROS-Industrial simple_message package, ROS Wiki, on-line, retrieved 1 June 2014
    (http://wiki.ros.org/simple_message)
-.. [#rosi_ml] ROS-Industrial mailing list (Google Group)
-   (https://groups.google.com/forum/?fromgroups#!forum/swri-ros-pkg-dev)
+.. [#rosi_rdq] ROS-Industrial category (ROS Discourse)
+   (https://discourse.ros.org/c/ros-industrial)
 .. [#msg_ping] PING, message definition, industrial_core Github repository, on-line
    (https://github.com/ros-industrial/industrial_core/blob/12a74a1f9f26aea0ee075edaf4c84473bd8e112a/simple_message/include/simple_message/ping_message.h#L49-L52)
 .. [#msg_joint_pos] JOINT_POSITION, message definition, industrial_core Github repository, on-line
