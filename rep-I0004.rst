@@ -295,8 +295,10 @@ Motoman
       2009  ROS_MSG_MOTO_WRITE_IO_GROUP           Write whole group (byte) of 'Network Inputs'
       2010  ROS_MSG_MOTO_WRITE_IO_GROUP_REPLY     -
       2011  ROS_MSG_MOTO_IOCTRL_REPLY             -
+      2012  ROS_MSG_MOTO_READ_MREGISTER           Read M-Register (M000 through M999)
+      2013  ROS_MSG_MOTO_WRITE_MREGISTER          Write M-Register (M000 through M599)
 
- 2012-2015  -                                     Reserved for future use
+ 2014-2015  -                                     Reserved for future use
 
       2016  ROS_MSG_MOTO_JOINT_TRAJ_PT_FULL_EX    Command multiple control-groups with a single message
       2017  ROS_MSG_MOTO_JOINT_FEEDBACK_EX        Get feedback position of multiple control-groups with a single message
@@ -337,6 +339,7 @@ Revision History
 
 ::
 
+  2020-11-25  Add Motoman specific messages for accessing M-Registers.
   2019-08-20  Add Motoman specific messages: get D-H parameters and
               tool configuration selection.
   2017-03-28  Update Motoman specific I/O messages.
