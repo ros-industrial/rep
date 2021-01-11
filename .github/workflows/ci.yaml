@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  # direct pushes to protected branches are not supported
+  pull_request:
+  # allow manually starting this workflow
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch sources
+      uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install linter
+      run: |
+        # not tracking upstream: change version if/when required
+        pip install doc8==0.8.0
+    - name: Lint with doc8
+      run: |
+        # we ignore D001 (Line too long) as REPs rely on (soft) wrapping in
+        # editors / viewers.
+        doc8 --file-encoding=utf8 --ignore D001 *.rst
