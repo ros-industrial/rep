@@ -10,13 +10,6 @@
   Post-History:
 
 
-TODO
-====
-
-#. should a 'generic reply' (ie: ACK) message be defined (Body_)?
-#. problem with 'velocity' in `JOINT_TRAJ_PT`_ (and `JOINT_TRAJ_PT_FULL`_): is that max velocity over segment, average velocity, or does it encode desired state of manipulator at a specific point in time?
-
-
 Abstract
 ========
 
