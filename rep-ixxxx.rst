@@ -672,6 +672,7 @@ Notes
    Server programs shall convert joint pose data from units used by the controller.
 #. This message does not currently support motion controllers that support more than ten (``10``) axes in a single motion group.
    A suggested work-around is to divide the total number of axes over a number of *virtual* motion groups and use additional processing logic on the client side to recombine multiple ``JOINT_FEEDBACK`` messages into a single representation of controller joint state.
+   Note that such virtual groups are currently *not* supported by the generic nodes in ``industrial_robot_client``.
 
 
 Defined Constants
