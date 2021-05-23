@@ -620,6 +620,7 @@ Notes
 #. Refer to `Valid fields`_ for defined bit positions for the ``valid_fields`` field.
 #. Drivers shall set all undefined bit positions in ``valid_fields`` to zero (``0``).
 #. Drivers shall set all elements of invalid fields (as encoded by ``valid_fields``) to zero (``0``).
+#. The ``time`` field shall be used to encode the point in time at which the state encoded in the message must be attained by the targetted motion group. Units is *seconds*.
 #. Elements of ``positions``, ``velocities`` and ``accelerations`` that are not used must be initialised to zero (``0``) by the sender.
 #. The number of elements in the ``positions``, ``velocities`` and ``accelerations`` arrays must always be equal to ten (``10``), even if the server implementation does not need that many elements (for instance because it only has six joints).
 #. Velocity control interfaces may be implemented by servers by accepting ``JOIN_TRAJ_PT_FULL`` messages that have the ``valid_fields`` bitmask set to ``VELOCITY``.
@@ -659,6 +660,9 @@ Notes
 #. Refer to `Valid fields`_ for defined bit positions for the ``valid_fields`` field.
 #. Drivers shall set all undefined bit positions in ``valid_fields`` to zero (``0``).
 #. Drivers shall set all elements of invalid fields (as encoded by ``valid_fields``) to zero (``0``).
+#. The ``time`` field shall be used to encode the precise time at which the state data was captured. Units is *seconds*.
+   It is acceptable for server programs to use the local clock of the controller.
+   Driver authors are recommended to require users to synchronise the controller's clock with the client's clock to facilitate comparison of timestamps.
 #. Elements of ``positions``, ``velocities`` and ``accelerations`` that are not used must be initialised to zero (``0``) by the sender.
 #. The number of elements in the ``positions``, ``velocities`` and ``accelerations`` arrays must always be equal to ten (``10``), even if the server implementation does not need that many elements (for instance because it only has six joints).
 #. This message does not currently support motion controllers that support more than ten (``10``) axes in a single motion group.
