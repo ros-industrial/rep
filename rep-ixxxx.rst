@@ -137,7 +137,27 @@ As a retrospective REP, this document only describes the *existing situation*, s
 Model of Operation
 ------------------
 
-TODO: client-server based. Controller-specific programs running on the controller, generic ROS nodes are provided by ``industrial_robot_client`` package. Nodes (try to) open TCP (by default) connections to the server programs on the controller. All *state relay*-type server programs broadcast state periodically in *topic like* messages, clients command motion by enqueuing trajectory points at the server side using *service like* messages sent to *trajectory relay* programs, requesting execution of the trajectory according to the communicated constraints (velocity, time_from_start etc). Client is *not* in direct control of motion, server makes use of robot controller facilities (interpolation, etc).
+Simple Message is client-server based.
+Server programs (often written in OEM proprietary languages) run on the industrial controller, with generic clients provided by the ``industrial_robot_client`` package.
+Note that it is acceptable for drivers to *not* make use of the generic clients, for instance because of special requirements to the control flow or data formatting restrictions which cannot be easily integrated into the ``industrial_robot_client`` nodes.
+
+The default transport is TCP/IP, with UDP/IP an option (but not directly supported by the generic clients).
+On startup, the generic clients will try to open a connection to a server program running on the OEM controller at the configured IP and port.
+In some cases, there will be multiple server programs running concurrently, each responsible for a specific task, such as (network) communication, robot state gathering, motion sequencing and execution or error reporting and handling.
+This is most often the case when controllers do not support integrating all such tasks into a single program (for instance: servers may not allow a single program to control multiple motion groups, requiring an instance of the server for each group).
+In such cases it's common for server programs to listen on different TCP or UDP ports, and clients to connect to different ports for the different functions.
+It is the servers responsibility then to coordinate those programs and the client's access to them.
+
+In almost all cases, Simple Message server programs are plain, user-level task programs, without any special access to OEM controller internals, motion primitives.
+They also do not bypass any safety systems present in the OEM controller.
+This immediately implies that such server programs are subject to all the same limitations as other programs written in the OEM's language (both in performance as well as interaction with any safety systems).
+A further consequence is that clients are *not* in direct control of the robot: clients send requests to server programs which act on their behalf, but also only *proxy* the functionality offered by the OEM controller itself.
+
+All *state relay*-type server programs broadcast robot state periodically in *topic like* messages.
+Those messages are received by clients, converted into corresponding ROS messages and forwarded to the rest of the ROS application.
+Clients command motion by *enqueuing* trajectory points on the server side using *service like* messages sent to *trajectory relay* programs.
+Similar to the ROS messages used for representing trajectories,
+Trajectory relays execute motion either directly, or via additional programs which take care of interacting with the OEM controller's motion sub system(s).
 
 
 Bytestream Layout
