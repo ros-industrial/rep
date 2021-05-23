@@ -1,13 +1,13 @@
 ::
 
-  REP: Ixxxx
+  REP: I0006
   Title: Message Structures of the ROS-Industrial Simple Message Protocol
   Author: G.A. vd. Hoorn <g.a.vanderhoorn@tudelft.nl>
-  Status: Draft
+  Status: Active
   Type: Process
   Content-Type: text/x-rst
   Created: 16-Jan-2018
-  Post-History:
+  Post-History: 23-May-2021
 
 
 Abstract
@@ -910,6 +910,7 @@ Revision History
 
 ::
 
+  2021-May-23   Make REP active
   2018-Jan-16   Initial revision
 
 
