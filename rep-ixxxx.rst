@@ -460,6 +460,7 @@ Notes
 #. Controllers that support or are configured with more than a single motion group should use the `JOINT_TRAJ_PT_FULL`_ message if they wish to relay trajectories for all configured motion groups.
 #. The elements of the ``joint_data`` field shall represent the joint space positions of the corresponding joint axes of the controller.
    Units are *radians* for rotational or revolute axes, and *metres* for translational or prismatic axes (see also [#REP103]_).
+   Server programs shall convert joint pose data to units used by the controller.
 #. The ``duration`` field represents total segment duration for all joints in seconds [#REP103]_.
    The generic nodes calculate this duration based on the time needed by the slowest joint to complete the segment.
    As an alternative to the ``duration`` field, the value of the ``velocity`` field is a value representing the fraction ``(0.0, 1.0]`` of maximum joint velocity that should be used when executing the motion for the current segment.
@@ -623,6 +624,8 @@ Notes
 #. The ``time`` field shall be used to encode the point in time at which the state encoded in the message must be attained by the targetted motion group. Units is *seconds*.
 #. Elements of ``positions``, ``velocities`` and ``accelerations`` that are not used must be initialised to zero (``0``) by the sender.
 #. The number of elements in the ``positions``, ``velocities`` and ``accelerations`` arrays must always be equal to ten (``10``), even if the server implementation does not need that many elements (for instance because it only has six joints).
+#. Units used for the elements of the ``positions``, ``velocities`` and ``accelerations`` fields are *radians* (and radians/s, radians/s^2) for rotational or revolute axes, and *metres* (and metres/s, metres/s^2) for translational or prismatic axes (see also [#REP103]_).
+   Server programs shall convert joint pose data to units used by the controller.
 #. Velocity control interfaces may be implemented by servers by accepting ``JOIN_TRAJ_PT_FULL`` messages that have the ``valid_fields`` bitmask set to ``VELOCITY``.
 
 
@@ -665,6 +668,8 @@ Notes
    Driver authors are recommended to require users to synchronise the controller's clock with the client's clock to facilitate comparison of timestamps.
 #. Elements of ``positions``, ``velocities`` and ``accelerations`` that are not used must be initialised to zero (``0``) by the sender.
 #. The number of elements in the ``positions``, ``velocities`` and ``accelerations`` arrays must always be equal to ten (``10``), even if the server implementation does not need that many elements (for instance because it only has six joints).
+#. Units used for the elements of the ``positions``, ``velocities`` and ``accelerations`` fields are *radians* (and radians/s, radians/s^2) for rotational or revolute axes, and *metres* (and metres/s, metres/s^2) for translational or prismatic axes (see also [#REP103]_).
+   Server programs shall convert joint pose data from units used by the controller.
 #. This message does not currently support motion controllers that support more than ten (``10``) axes in a single motion group.
    A suggested work-around is to divide the total number of axes over a number of *virtual* motion groups and use additional processing logic on the client side to recombine multiple ``JOINT_FEEDBACK`` messages into a single representation of controller joint state.
 
