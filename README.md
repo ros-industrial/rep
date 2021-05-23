@@ -11,6 +11,7 @@ Index
  2. [Industrial Systems Calibration Methods/Routine][], status: draft
  3. [Cartesian Path Planner Interface Pipeline][], status: draft
  4. [Assigned Message Identifiers for the Simple Message Protocol][], status: active
+ 6. [Message Structures of the ROS-Industrial Simple Message Protocol][], status: active
  7. [Naming conventions for ABB robots in ROS-Industrial][], status: active
 
 Note: only REPs with *status: active* have been accepted and have been implemented.
@@ -21,4 +22,5 @@ Note: only REPs with *status: active* have been accepted and have been implement
 [Industrial Systems Calibration Methods/Routine]: rep-I0002.rst
 [Cartesian Path Planner Interface Pipeline]: rep-I0003.rst
 [Assigned Message Identifiers for the Simple Message Protocol]: rep-I0004.rst
+[Message Structures of the ROS-Industrial Simple Message Protocol]: rep-I0006.rst
 [Naming conventions for ABB robots in ROS-Industrial]: rep-I0007.rst
