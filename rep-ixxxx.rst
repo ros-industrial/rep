@@ -440,8 +440,14 @@ Reply::
   Header
   dummy_data       : shared_real[10]
 
+*Alternative* reply::
+
+  Prefix
+  Header
+
 Notes
 
+#. The *alternative* reply will be understood by the generic nodes in ``industrial_robot_client``, but other clients may expect a full, fixed size message, which would include the ``dummy_data``.
 #. Drivers shall set the value of the ``reply_code`` field in the ``Header`` of the reply messages to *the result of the enqueueing operation* of the trajectory point that was transmitted in the request.
    It shall *not* be used to report the success or failure of the *execution* of the motion.
    Drivers should use the appropriate fields in `STATUS`_ for that (note: the generic nodes in ``industrial_robot_client`` currently ignore the ``reply_code`` field of incoming `JOINT_TRAJ_PT`_ replies (see [#irc_issue118]_). Nevertheless, server implementations must send replies to incoming `JOINT_TRAJ_PT`_ requests. Failure to do so will prevent the exchange of further messages).
@@ -493,7 +499,14 @@ Reply::
   Header
   dummy_data       : shared_real[10]
 
-Notes: none.
+*Alternative* reply::
+
+  Prefix
+  Header
+
+Notes
+
+#. The *alternative* reply will be understood by the generic nodes in ``industrial_robot_client``, but other clients may expect a full, fixed size message, which would include the ``dummy_data``.
 
 
 STATUS
@@ -586,8 +599,14 @@ Reply::
   Header
   dummy_data       : shared_real[10]
 
+*Alternative* reply::
+
+  Prefix
+  Header
+
 Notes
 
+#. The *alternative* reply will be understood by the generic nodes in ``industrial_robot_client``, but other clients may expect a full, fixed size message, which would include the ``dummy_data``.
 #. Drivers shall set the value of the ``reply_code`` field in the ``Header`` of the reply messages to the result of the *enqueueing operation* of the trajectory point that was transmitted in the request.
    It shall *not* to be used to report the success or failure of the *execution* of the motion.
    Drivers should use the appropriate fields in `STATUS`_ for that (note: the generic nodes in ``industrial_robot_client`` currently ignore the ``reply_code`` field of incoming `JOINT_TRAJ_PT_FULL`_ replies (see [#irc_issue118]_). Nevertheless, server implementations must send replies to incoming `JOINT_TRAJ_PT_FULL`_ requests. Failure to do so will prevent the exchange of further messages).
